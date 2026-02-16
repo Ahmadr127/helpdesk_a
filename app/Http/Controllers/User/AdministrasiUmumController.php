@@ -384,12 +384,27 @@ class AdministrasiUmumController extends Controller
         // Load the relationships we need
         $order = $orderPerbaikan->load(['history.creator', 'location', 'creator']);
         
+        // TEMPORARY DEBUG LOGGING - Remove after fix
+        \Log::info('===== ORDER ACCESS DEBUG =====');
+        \Log::info('Order ID: ' . $order->id);
+        \Log::info('Order created_by: ' . $order->created_by);
+        \Log::info('Order created_by TYPE: ' . gettype($order->created_by));
+        \Log::info('Current auth user ID: ' . auth()->id());
+        \Log::info('Current auth user TYPE: ' . gettype(auth()->id()));
+        \Log::info('Current auth user role: ' . auth()->user()->role);
+        \Log::info('IDs match: ' . ($order->created_by === auth()->id() ? 'YES' : 'NO'));
+        \Log::info('Is admin: ' . (auth()->user()->role === 'admin' ? 'YES' : 'NO'));
+        \Log::info('Should allow: ' . (($order->created_by === auth()->id() || auth()->user()->role === 'admin') ? 'YES' : 'NO'));
+        \Log::info('===============================');
+        
         // Check if the current user is authorized to view this order
         // Admin can view all orders, regular users can only view their own
         if ($order->created_by !== auth()->id() && auth()->user()->role !== 'admin') {
+            \Log::error('AUTHORIZATION FAILED - Returning 403');
             abort(403, 'Unauthorized action.');
         }
 
+        \Log::info('AUTHORIZATION SUCCESS - Showing order');
         return view('user.administrasi-umum.order-perbaikan.show', compact('order'));
     }
 
