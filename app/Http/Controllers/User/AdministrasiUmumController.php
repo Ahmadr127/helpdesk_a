@@ -385,7 +385,8 @@ class AdministrasiUmumController extends Controller
         $order = $orderPerbaikan->load(['history.creator', 'location', 'creator']);
         
         // Check if the current user is authorized to view this order
-        if ($order->created_by !== auth()->id()) {
+        // Admin can view all orders, regular users can only view their own
+        if ($order->created_by !== auth()->id() && auth()->user()->role !== 'admin') {
             abort(403, 'Unauthorized action.');
         }
 
@@ -395,7 +396,8 @@ class AdministrasiUmumController extends Controller
     public function editOrderPerbaikan(OrderPerbaikan $orderPerbaikan)
     {
         // Check if the current user is authorized to edit this order
-        if ($orderPerbaikan->created_by !== auth()->id()) {
+        // Admin can edit all orders, regular users can only edit their own
+        if ($orderPerbaikan->created_by !== auth()->id() && auth()->user()->role !== 'admin') {
             abort(403, 'Unauthorized action.');
         }
 
@@ -412,7 +414,8 @@ class AdministrasiUmumController extends Controller
     public function updateOrderPerbaikan(Request $request, OrderPerbaikan $orderPerbaikan)
     {
         // Check if the current user is authorized to update this order
-        if ($orderPerbaikan->created_by !== auth()->id()) {
+        // Admin can update all orders, regular users can only update their own
+        if ($orderPerbaikan->created_by !== auth()->id() && auth()->user()->role !== 'admin') {
             abort(403, 'Unauthorized action.');
         }
 
