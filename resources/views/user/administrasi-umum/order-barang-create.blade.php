@@ -30,8 +30,8 @@
             <form id="newOrderForm" class="p-6">
                 @csrf
                 <div class="grid grid-cols-12 gap-6">
-                    <!-- Kolom Kiri -->
-                    <div class="col-span-8 space-y-4">
+                    <!-- Form Fields -->
+                    <div class="col-span-12 space-y-4">
                         <!-- Nomor dan Tanggal -->
                         <div class="grid grid-cols-2 gap-4">
                             <div>
@@ -131,34 +131,6 @@
                                 class="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-blue-500"></textarea>
                         </div>
                     </div>
-
-                    <!-- Kolom Kanan - Status Section -->
-                    <div class="col-span-4">
-                        <div class="bg-gray-50 p-4 rounded-lg h-full">
-                            <h3 class="text-lg font-semibold text-gray-900 mb-4">Informasi Status</h3>
-                            <div class="space-y-4">
-                                <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-1">Status</label>
-                                    <div class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-yellow-100 text-yellow-800">
-                                        <span class="w-2 h-2 bg-yellow-400 rounded-full mr-2"></span>
-                                        Pending
-                                    </div>
-                                </div>
-                                <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-1">Follow Up</label>
-                                    <div class="text-sm text-gray-600">Menunggu konfirmasi</div>
-                                </div>
-                                <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-1">Tanggal Dibuat</label>
-                                    <div class="text-sm text-gray-900" id="info_tanggal">-</div>
-                                </div>
-                                <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-1">Nama P. Jawab</label>
-                                    <div class="text-sm text-gray-600">Belum ditentukan</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
                 </div>
 
                 <!-- Form Footer -->
@@ -196,7 +168,6 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('tanggal_display').value = formattedDate;
     document.getElementById('waktu_display').value = formattedTime;
     document.getElementById('tanggal_input').value = isoDateTime;
-    document.getElementById('info_tanggal').textContent = formattedDate + ' ' + formattedTime;
 });
 
 // Form submission handler
