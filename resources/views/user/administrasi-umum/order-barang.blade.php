@@ -123,11 +123,11 @@
                             </th>
                             <th scope="col"
                                 class="px-6 py-3 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">
-                                Unit
+                                Kategori / Dept
                             </th>
                             <th scope="col"
                                 class="px-6 py-3 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">
-                                Nama Barang
+                                Keluhan
                             </th>
                             <th scope="col"
                                 class="px-6 py-3 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">

@@ -48,8 +48,12 @@
                     <div class="p-4">
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div class="space-y-1">
-                                <p class="text-sm font-medium text-gray-500">Unit Proses</p>
-                                <p class="font-medium">{{ $orderPerbaikan->unit_proses_name }}</p>
+                                <p class="text-sm font-medium text-gray-500">Kategori</p>
+                                <p class="font-medium">{{ $orderPerbaikan->category?->name ?? '-' }}</p>
+                            </div>
+                            <div class="space-y-1">
+                                <p class="text-sm font-medium text-gray-500">Departemen</p>
+                                <p class="font-medium">{{ $orderPerbaikan->department?->name ?? '-' }}</p>
                             </div>
                             <div class="space-y-1">
                                 <p class="text-sm font-medium text-gray-500">Prioritas</p>
@@ -68,7 +72,7 @@
                                 <p class="text-sm font-medium text-gray-500">Tanggal Order</p>
                                 <p class="font-medium">{{ $orderPerbaikan->tanggal->format('d M Y, H:i') }}</p>
                             </div>
-                            <div class="space-y-1">
+                            <div class="space-y-1 md:col-span-2">
                                 <p class="text-sm font-medium text-gray-500">Dibuat Oleh</p>
                                 <p class="font-medium">{{ $orderPerbaikan->creator->name }}</p>
                             </div>
@@ -84,17 +88,25 @@
                     <div class="p-4">
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div class="space-y-1">
-                                <p class="text-sm font-medium text-gray-500">Jenis Barang</p>
-                                <p class="font-medium">{{ $orderPerbaikan->jenis_barang }}</p>
+                                <p class="text-sm font-medium text-gray-500">Lokasi</p>
+                                <p class="font-medium">{{ $orderPerbaikan->location?->name ?? '-' }}</p>
                             </div>
+                            <div class="space-y-1">
+                                <p class="text-sm font-medium text-gray-500">Gedung</p>
+                                <p class="font-medium">{{ $orderPerbaikan->building?->name ?? '-' }}</p>
+                            </div>
+                            @if($orderPerbaikan->nama_barang)
+                            <div class="space-y-1">
+                                <p class="text-sm font-medium text-gray-500">Nama Barang</p>
+                                <p class="font-medium">{{ $orderPerbaikan->nama_barang }}</p>
+                            </div>
+                            @endif
+                            @if($orderPerbaikan->kode_inventaris)
                             <div class="space-y-1">
                                 <p class="text-sm font-medium text-gray-500">Kode Inventaris</p>
                                 <p class="font-medium">{{ $orderPerbaikan->kode_inventaris }}</p>
                             </div>
-                            <div class="space-y-1 md:col-span-2">
-                                <p class="text-sm font-medium text-gray-500">Nama Barang</p>
-                                <p class="font-medium">{{ $orderPerbaikan->nama_barang }}</p>
-                            </div>
+                            @endif
                             <div class="space-y-1 md:col-span-2">
                                 <p class="text-sm font-medium text-gray-500">Keluhan</p>
                                 <p class="font-medium text-gray-700 bg-gray-50 p-3 rounded-md">
@@ -107,7 +119,7 @@
                 <!-- Photo Card -->
                 <div class="bg-white rounded-lg border border-gray-200 overflow-hidden h-full">
                     <div class="px-4 py-3 bg-gradient-to-r from-blue-300 to-gray-200 border-b border-gray-200">
-                        <h2 class="text-lg font-semibold text-gray-700">Foto Barang</h2>
+                        <h2 class="text-lg font-semibold text-gray-700">Foto &amp; Lokasi</h2>
                     </div>
                     <div class="p-4">
                         @if($orderPerbaikan->foto)

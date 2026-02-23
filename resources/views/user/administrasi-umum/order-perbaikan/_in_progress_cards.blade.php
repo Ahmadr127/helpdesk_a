@@ -12,11 +12,18 @@
                 </span>
             </div>
             <div class="mb-3">
-                <h3 class="text-sm font-medium text-gray-900">{{ $order->nama_barang }}</h3>
+                <h3 class="text-sm font-medium text-gray-900">{{ $order->category?->name ?? '-' }}</h3>
+                <p class="text-xs text-gray-500 mb-1">{{ $order->department?->name ?? '-' }}</p>
                 <p class="text-xs text-gray-600 line-clamp-2">{{ $order->keluhan }}</p>
             </div>
             <div class="flex justify-between items-center">
-                <span class="text-xs font-medium {{ $order->prioritas === 'OCTO' ? 'text-yellow-600' : 'text-green-600' }}">
+                <span class="text-xs font-medium px-2 py-0.5 rounded-full
+                    {{ match($order->prioritas) {
+                        'RENDAH' => 'bg-green-100 text-green-700',
+                        'SEDANG' => 'bg-yellow-100 text-yellow-700',
+                        'TINGGI/URGENT' => 'bg-red-100 text-red-700',
+                        default => 'bg-gray-100 text-gray-600'
+                    } }}">
                     {{ $order->prioritas }}
                 </span>
                 <button onclick="showOrderDetail('{{ $order->id }}')"
@@ -31,4 +38,4 @@
 <div class="w-full bg-gray-50 rounded-lg p-6 text-center">
     <p class="text-gray-500">Tidak ada order dalam proses</p>
 </div>
-@endforelse 
+@endforelse

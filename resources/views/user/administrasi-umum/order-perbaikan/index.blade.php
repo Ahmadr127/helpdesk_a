@@ -110,13 +110,13 @@
                     </select>
                 </div>
                 <div>
-                    <label class="block text-sm font-medium text-gray-700">Departemen</label>
-                    <select name="department"
+                    <label class="block text-sm font-medium text-gray-700">Kategori</label>
+                    <select name="category"
                         class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
-                        <option value="">Semua Departemen</option>
-                        @foreach($departments ?? [] as $department)
-                        <option value="{{ $department }}" {{ request('department') == $department ? 'selected' : '' }}>
-                            {{ $department }}
+                        <option value="">Semua Kategori</option>
+                        @foreach($categories ?? [] as $category)
+                        <option value="{{ $category->id }}" {{ request('category') == $category->id ? 'selected' : '' }}>
+                            {{ $category->name }}
                         </option>
                         @endforeach
                     </select>
@@ -142,8 +142,8 @@
                     <tr
                         class="text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b bg-gray-50">
                         <th class="px-4 py-3">Nomor Order</th>
-                        <th class="px-4 py-3">Nama Barang</th>
-                        <th class="px-4 py-3">Departemen</th>
+                        <th class="px-4 py-3">Kategori / Dept</th>
+                        <th class="px-4 py-3">Keluhan</th>
                         <th class="px-4 py-3">Status</th>
                         <th class="px-4 py-3">Prioritas</th>
                         <th class="px-4 py-3">Tanggal</th>
@@ -154,8 +154,13 @@
                     @forelse($orders as $order)
                     <tr class="text-gray-700">
                         <td class="px-4 py-3">{{ $order->nomor }}</td>
-                        <td class="px-4 py-3">{{ $order->nama_barang }}</td>
-                        <td class="px-4 py-3">{{ $order->unit_proses_name }}</td>
+                        <td class="px-4 py-3">
+                            <div class="text-sm">{{ $order->category?->name ?? '-' }}</div>
+                            <div class="text-xs text-gray-500">{{ $order->department?->name ?? '-' }}</div>
+                        </td>
+                        <td class="px-4 py-3 max-w-xs">
+                            <p class="text-sm truncate">{{ $order->keluhan }}</p>
+                        </td>
                         <td class="px-4 py-3">
                             <span class="px-2 py-1 text-xs font-semibold rounded-full
                                 {{ $order->status === 'open' ? 'bg-blue-100 text-blue-800' : '' }}

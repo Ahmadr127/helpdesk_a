@@ -127,7 +127,7 @@ class DashboardController extends Controller
         ];
 
         // Get recent orders with eager loading
-        $recentOrders = OrderPerbaikan::with(['creator', 'location'])
+        $recentOrders = OrderPerbaikan::with(['creator', 'location', 'category', 'department'])
             ->whereIn('status', ['open', 'in_progress'])
             ->latest()
             ->take(8)

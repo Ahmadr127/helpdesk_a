@@ -11,6 +11,9 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use App\Models\Location;
 use App\Models\UnitProses;
+use App\Models\Department;
+use App\Models\Category;
+use App\Models\Building;
 use Illuminate\Support\Facades\Storage;
 
 class AdministrasiUmumController extends Controller
@@ -18,7 +21,7 @@ class AdministrasiUmumController extends Controller
     public function orderBarang(Request $request)
     {
         // Base query for in progress orders
-        $inProgressQuery = OrderPerbaikan::with(['creator'])
+        $inProgressQuery = OrderPerbaikan::with(['creator', 'category', 'department', 'location'])
             ->where('created_by', auth()->id())
             ->where('status', 'in_progress');
 
@@ -27,9 +30,7 @@ class AdministrasiUmumController extends Controller
             $search = $request->search;
             $inProgressQuery->where(function($q) use ($search) {
                 $q->where('nomor', 'like', "%{$search}%")
-                  ->orWhere('nama_barang', 'like', "%{$search}%")
-                  ->orWhere('keluhan', 'like', "%{$search}%")
-                  ->orWhere('kode_inventaris', 'like', "%{$search}%");
+                  ->orWhere('keluhan', 'like', "%{$search}%");
             });
         }
 
@@ -44,7 +45,7 @@ class AdministrasiUmumController extends Controller
         $inProgressOrders = $inProgressQuery->latest()->take(6)->get();
 
         // Get open orders for table
-        $query = OrderPerbaikan::with(['creator', 'history'])
+        $query = OrderPerbaikan::with(['creator', 'history', 'category', 'department', 'location'])
             ->where('created_by', auth()->id())
             ->where('status', 'open');
 
@@ -53,9 +54,7 @@ class AdministrasiUmumController extends Controller
             $search = $request->search;
             $query->where(function($q) use ($search) {
                 $q->where('nomor', 'like', "%{$search}%")
-                  ->orWhere('nama_barang', 'like', "%{$search}%")
-                  ->orWhere('keluhan', 'like', "%{$search}%")
-                  ->orWhere('kode_inventaris', 'like', "%{$search}%");
+                  ->orWhere('keluhan', 'like', "%{$search}%");
             });
         }
 
@@ -68,10 +67,6 @@ class AdministrasiUmumController extends Controller
         }
 
         $orders = $query->orderBy('created_at', 'desc')->paginate(10);
-        $locations = Location::orderBy('name', 'asc')->get();
-        $unitProses = UnitProses::where('status', 1)
-            ->where('code', '!=', 'SIRS')
-            ->get();
 
         if (request()->ajax()) {
             return response()->json([
@@ -81,12 +76,12 @@ class AdministrasiUmumController extends Controller
             ]);
         }
 
-        return view('user.administrasi-umum.order-barang', compact('orders', 'inProgressOrders', 'locations', 'unitProses'));
+        return view('user.administrasi-umum.order-barang', compact('orders', 'inProgressOrders'));
     }
 
     public function orderBarangKonfirmasi(Request $request)
     {
-        $query = OrderPerbaikan::with(['creator', 'history'])
+        $query = OrderPerbaikan::with(['creator', 'history', 'category', 'department'])
             ->where('created_by', auth()->id())
             ->where('status', 'confirmed');
 
@@ -112,7 +107,7 @@ class AdministrasiUmumController extends Controller
 
     public function orderBarangReject(Request $request)
     {
-        $query = OrderPerbaikan::with(['creator', 'history'])
+        $query = OrderPerbaikan::with(['creator', 'history', 'category', 'department'])
             ->where('created_by', auth()->id())
             ->where('status', 'rejected');
 
@@ -274,7 +269,7 @@ class AdministrasiUmumController extends Controller
         $status = $request->status ?? 'all';
         
         // Base query
-        $query = OrderPerbaikan::with(['creator', 'history'])
+        $query = OrderPerbaikan::with(['creator', 'history', 'category', 'department', 'location'])
             ->where('created_by', auth()->id());
 
         // Filter by status if specified
@@ -287,9 +282,7 @@ class AdministrasiUmumController extends Controller
             $search = $request->search;
             $query->where(function($q) use ($search) {
                 $q->where('nomor', 'like', "%{$search}%")
-                  ->orWhere('nama_barang', 'like', "%{$search}%")
-                  ->orWhere('keluhan', 'like', "%{$search}%")
-                  ->orWhere('kode_inventaris', 'like', "%{$search}%");
+                  ->orWhere('keluhan', 'like', "%{$search}%");
             });
         }
 
@@ -302,12 +295,8 @@ class AdministrasiUmumController extends Controller
         }
 
         $orders = $query->orderBy('created_at', 'desc')->paginate(10);
-        $locations = Location::all();
-        $unitProses = UnitProses::where('status', 1)
-            ->where('code', '!=', 'SIRS')
-            ->get();
 
-        // Get statistics excluding soft-deleted records
+        // Get statistics
         $stats = [
             'total' => OrderPerbaikan::where('created_by', auth()->id())->count(),
             'in_progress' => OrderPerbaikan::where('created_by', auth()->id())->where('status', 'in_progress')->count(),
@@ -322,7 +311,7 @@ class AdministrasiUmumController extends Controller
             ]);
         }
 
-        return view('user.administrasi-umum.order-perbaikan.index', compact('orders', 'locations', 'unitProses', 'status', 'stats'));
+        return view('user.administrasi-umum.order-perbaikan.index', compact('orders', 'status', 'stats'));
     }
 
     public function createOrderPerbaikan()
@@ -346,90 +335,75 @@ class AdministrasiUmumController extends Controller
             }
 
             $nomor = $prefix . $newNumber;
-            $locations = Location::orderBy('name', 'asc')->get();
-            $unitProses = UnitProses::where('status', 1)
-                ->where('code', '!=', 'SIRS')
-                ->get();
+            $locations = Location::where('status', 1)->with('building')->orderBy('name', 'asc')->get();
+            $unitProses = UnitProses::where('status', 1)->where('code', '!=', 'SIRS')->get();
+            // Gunakan kategori SIRS — sama seperti form tiket
+            $categories = Category::where('status', 1)
+                ->whereHas('unitProses', function($q) {
+                    $q->where('code', 'SIRS');
+                })->get();
 
-            // Get user data
+            // Get user department
             $user = auth()->user();
-
-            if (request()->ajax()) {
-                return response()->json([
-                    'success' => true,
-                    'data' => [
-                        'nomor' => $nomor,
-                        'tanggal' => $currentDate->format('Y-m-d H:i:s'),
-                        'locations' => $locations,
-                        'unitProses' => $unitProses,
-                        'user' => [
-                            'nip' => $user->nip,
-                            'name' => $user->name
-                        ]
-                    ]
-                ]);
-            }
+            $userDepartment = Department::where('code', $user->department)->first();
 
             return view('user.administrasi-umum.order-perbaikan.create', 
-                compact('nomor', 'locations', 'unitProses', 'user'));
+                compact('nomor', 'locations', 'unitProses', 'categories', 'userDepartment', 'user'));
 
         } catch (\Exception $e) {
-            if (request()->ajax()) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Terjadi kesalahan: ' . $e->getMessage()
-                ], 500);
-            }
-            throw $e;
+            return redirect()->back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
         }
     }
 
     public function storeOrderPerbaikan(Request $request)
     {
         $validated = $request->validate([
-            'unit_proses_code' => [
-                'required',
-                'exists:unit_proses,code',
-                function ($attribute, $value, $fail) {
-                    if ($value === 'SIRS') {
-                        $fail('Unit proses SIRS tidak dapat dipilih untuk order barang.');
-                    }
-                },
-            ],
-            'jenis_barang' => 'required|in:Umum,Inventaris',
-            'kode_inventaris' => 'nullable|string',
-            'nama_barang' => 'required|string',
-            'lokasi' => 'required|exists:locations,id',
-            'keluhan' => 'required|string',
-            'prioritas' => 'required|in:RENDAH,SEDANG,TINGGI/URGENT',
-            'tanggal' => 'required|date',
-            'foto' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:10240', // max 10MB
+            'category_id'      => ['required', 'exists:categories,id', function ($attribute, $value, $fail) {
+                $category = Category::with('unitProses')->find($value);
+                if (!$category || $category->unitProses?->code !== 'SIRS') {
+                    $fail('Kategori yang dipilih harus kategori dari unit SIRS.');
+                }
+            }],
+            'lokasi'           => 'required|exists:locations,id',
+            'keluhan'          => 'required|string',
+            'prioritas'        => 'required|in:RENDAH,SEDANG,TINGGI/URGENT',
+            'tanggal'          => 'required|date',
+            'foto'             => 'nullable|image|mimes:jpeg,png,jpg,gif|max:10240',
+            // Field opsional
+            'nama_barang'      => 'nullable|string',
+            'jenis_barang'     => 'nullable|in:Umum,Inventaris',
+            'kode_inventaris'  => 'nullable|string',
+            'unit_proses_code' => 'nullable|exists:unit_proses,code',
         ]);
 
         try {
             DB::beginTransaction();
 
-            // Generate nomor order with today's date
+            // Generate nomor order
             $today = now();
             $prefix = 'OP/RTG/MTC-' . $today->format('Ymd');
-            
-            // Get the last order number for today, including soft deleted records
             $lastOrder = OrderPerbaikan::withTrashed()
                 ->where('nomor', 'like', $prefix . '%')
                 ->orderBy('nomor', 'desc')
                 ->first();
+            $lastNumber = $lastOrder ? (int) substr($lastOrder->nomor, -3) : 0;
+            $nomor = $prefix . str_pad($lastNumber + 1, 3, '0', STR_PAD_LEFT);
 
-            if ($lastOrder) {
-                $lastNumber = (int) substr($lastOrder->nomor, -3);
-                $newNumber = str_pad($lastNumber + 1, 3, '0', STR_PAD_LEFT);
-            } else {
-                $newNumber = '001';
+            // Get user & department
+            $user = auth()->user();
+            $userDepartment = Department::where('code', $user->department)->first();
+
+            // Get location & building
+            $location = Location::with('building')->findOrFail($validated['lokasi']);
+
+            // Get category
+            $category = Category::findOrFail($validated['category_id']);
+
+            // Handle opt. unit proses
+            $unitProsesData = null;
+            if (!empty($validated['unit_proses_code'])) {
+                $unitProsesData = UnitProses::where('code', $validated['unit_proses_code'])->first();
             }
-
-            $nomor = $prefix . $newNumber;
-
-            // Get unit proses data
-            $unitProses = UnitProses::where('code', $validated['unit_proses_code'])->firstOrFail();
 
             // Handle foto upload
             $fotoPath = null;
@@ -439,44 +413,36 @@ class AdministrasiUmumController extends Controller
                 $fotoPath = $foto->storeAs('order-photos', $filename, 'public');
             }
 
-            // Get logged in user's data
-            $user = auth()->user();
-
             $orderPerbaikan = OrderPerbaikan::create([
-                'nomor' => $nomor,
-                'tanggal' => $validated['tanggal'],
-                'unit_proses' => $unitProses->code,
-                'unit_proses_name' => $unitProses->name,
-                'unit_penerima' => 'MTC',
-                'nip_peminta' => $user->nip,
-                'nama_peminta' => $user->name,
-                'jenis_barang' => $validated['jenis_barang'],
-                'kode_inventaris' => $validated['kode_inventaris'] ?? '-',
-                'nama_barang' => $validated['nama_barang'],
-                'lokasi' => $validated['lokasi'],
-                'keluhan' => $validated['keluhan'],
-                'prioritas' => $validated['prioritas'],
-                'foto' => $fotoPath,
-                'status' => 'open',
-                'created_by' => auth()->id(),
+                'nomor'            => $nomor,
+                'tanggal'          => $validated['tanggal'],
+                'keluhan'          => $validated['keluhan'],
+                'prioritas'        => $validated['prioritas'],
+                'category_id'      => $category->id,
+                'department_id'    => $userDepartment?->id,
+                'lokasi'           => $location->id,
+                'building_id'      => $location->building?->id,
+                'nip_peminta'      => $user->nip,
+                'nama_peminta'     => $user->name,
+                // Opsional
+                'nama_barang'      => $validated['nama_barang'] ?? null,
+                'jenis_barang'     => $validated['jenis_barang'] ?? null,
+                'kode_inventaris'  => $validated['kode_inventaris'] ?? null,
+                'unit_proses'      => $unitProsesData?->code,
+                'unit_proses_name' => $unitProsesData?->name,
+                'unit_penerima'    => 'MTC',
+                'foto'             => $fotoPath,
+                'status'           => 'open',
+                'created_by'       => auth()->id(),
             ]);
 
-            // Add history entry for the creation
             $orderPerbaikan->history()->create([
-                'status' => 'open',
+                'status'     => 'open',
                 'keterangan' => 'Order dibuat',
                 'created_by' => auth()->id(),
             ]);
 
             DB::commit();
-
-            if ($request->ajax()) {
-                return response()->json([
-                    'success' => true,
-                    'message' => 'Order perbaikan berhasil dibuat dengan nomor: ' . $nomor,
-                    'data' => $orderPerbaikan
-                ]);
-            }
 
             return redirect()
                 ->route('user.administrasi-umum.order-perbaikan.show', $orderPerbaikan)
@@ -484,16 +450,7 @@ class AdministrasiUmumController extends Controller
 
         } catch (\Exception $e) {
             DB::rollBack();
-            
-            if ($request->ajax()) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Terjadi kesalahan saat membuat order: ' . $e->getMessage()
-                ], 500);
-            }
-
-            return redirect()
-                ->back()
+            return redirect()->back()
                 ->with('error', 'Terjadi kesalahan saat membuat order: ' . $e->getMessage())
                 ->withInput();
         }
@@ -514,79 +471,95 @@ class AdministrasiUmumController extends Controller
 
     public function editOrderPerbaikan(OrderPerbaikan $orderPerbaikan)
     {
-        // Check if the current user is authorized to edit this order
         if ($orderPerbaikan->created_by !== auth()->id()) {
             abort(403, 'Unauthorized action.');
         }
 
-        // Check if the order is still editable (open status)
         if ($orderPerbaikan->status !== 'open') {
             return redirect()->route('user.administrasi-umum.order-perbaikan.show', $orderPerbaikan)
                 ->with('error', 'Hanya order dengan status open yang dapat diedit.');
         }
 
-        $locations = Location::orderBy('name', 'asc')->get();
-        return view('user.administrasi-umum.order-perbaikan.edit', compact('orderPerbaikan', 'locations'));
+        $locations = Location::where('status', 1)->with('building')->orderBy('name', 'asc')->get();
+        $unitProses = UnitProses::where('status', 1)->where('code', '!=', 'SIRS')->get();
+        // Gunakan kategori SIRS — sama seperti form tiket
+        $categories = Category::where('status', 1)
+            ->whereHas('unitProses', function($q) {
+                $q->where('code', 'SIRS');
+            })->get();
+        $userDepartment = Department::where('code', auth()->user()->department)->first();
+
+        return view('user.administrasi-umum.order-perbaikan.edit',
+            compact('orderPerbaikan', 'locations', 'unitProses', 'categories', 'userDepartment'));
     }
 
     public function updateOrderPerbaikan(Request $request, OrderPerbaikan $orderPerbaikan)
     {
-        // Check if the current user is authorized to update this order
         if ($orderPerbaikan->created_by !== auth()->id()) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Unauthorized action.'
-            ], 403);
+            return response()->json(['success' => false, 'message' => 'Unauthorized action.'], 403);
         }
 
-        // Check if the order is still editable (open status)
         if ($orderPerbaikan->status !== 'open') {
-            return response()->json([
-                'success' => false,
-                'message' => 'Hanya order dengan status open yang dapat diedit.'
-            ], 422);
+            return response()->json(['success' => false, 'message' => 'Hanya order dengan status open yang dapat diedit.'], 422);
         }
 
         $validated = $request->validate([
-            'jenis_barang' => 'required|in:Umum,Inventaris',
-            'kode_inventaris' => 'nullable|string',
-            'nama_barang' => 'required|string',
-            'lokasi' => 'required|exists:locations,id',
-            'keluhan' => 'required|string',
-            'prioritas' => 'required|in:RENDAH,SEDANG,TINGGI/URGENT',
-            'foto' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:10240', // max 10MB
+            'category_id'      => ['required', 'exists:categories,id', function ($attribute, $value, $fail) {
+                $category = Category::with('unitProses')->find($value);
+                if (!$category || $category->unitProses?->code !== 'SIRS') {
+                    $fail('Kategori yang dipilih harus kategori dari unit SIRS.');
+                }
+            }],
+            'lokasi'           => 'required|exists:locations,id',
+            'keluhan'          => 'required|string',
+            'prioritas'        => 'required|in:RENDAH,SEDANG,TINGGI/URGENT',
+            'foto'             => 'nullable|image|mimes:jpeg,png,jpg,gif|max:10240',
+            // Opsional
+            'nama_barang'      => 'nullable|string',
+            'jenis_barang'     => 'nullable|in:Umum,Inventaris',
+            'kode_inventaris'  => 'nullable|string',
+            'unit_proses_code' => 'nullable|exists:unit_proses,code',
         ]);
 
         try {
             DB::beginTransaction();
 
-            // Handle foto upload if provided
+            $location = Location::with('building')->findOrFail($validated['lokasi']);
+
+            // Handle opt. unit proses
+            $unitProsesData = null;
+            if (!empty($validated['unit_proses_code'])) {
+                $unitProsesData = UnitProses::where('code', $validated['unit_proses_code'])->first();
+            }
+
+            // Handle foto
+            $fotoPath = $orderPerbaikan->foto;
             if ($request->hasFile('foto')) {
-                // Delete old foto if exists
                 if ($orderPerbaikan->foto) {
                     Storage::disk('public')->delete($orderPerbaikan->foto);
                 }
-                
                 $foto = $request->file('foto');
                 $filename = 'order_' . time() . '_' . $foto->getClientOriginalName();
                 $fotoPath = $foto->storeAs('order-photos', $filename, 'public');
-                $validated['foto'] = $fotoPath;
             }
 
             $orderPerbaikan->update([
-                'jenis_barang' => $validated['jenis_barang'],
-                'kode_inventaris' => $validated['kode_inventaris'],
-                'nama_barang' => $validated['nama_barang'],
-                'lokasi' => $validated['lokasi'],
-                'keluhan' => $validated['keluhan'],
-                'prioritas' => $validated['prioritas'],
-                'foto' => $validated['foto'] ?? $orderPerbaikan->foto,
-                'updated_by' => auth()->id(),
+                'category_id'      => $validated['category_id'],
+                'lokasi'           => $location->id,
+                'building_id'      => $location->building?->id,
+                'keluhan'          => $validated['keluhan'],
+                'prioritas'        => $validated['prioritas'],
+                'nama_barang'      => $validated['nama_barang'] ?? null,
+                'jenis_barang'     => $validated['jenis_barang'] ?? null,
+                'kode_inventaris'  => $validated['kode_inventaris'] ?? null,
+                'unit_proses'      => $unitProsesData?->code,
+                'unit_proses_name' => $unitProsesData?->name,
+                'foto'             => $fotoPath,
+                'updated_by'       => auth()->id(),
             ]);
 
-            // Add history entry for the update
             $orderPerbaikan->history()->create([
-                'status' => $orderPerbaikan->status,
+                'status'     => $orderPerbaikan->status,
                 'keterangan' => 'Order diperbarui',
                 'created_by' => auth()->id(),
             ]);
@@ -594,11 +567,7 @@ class AdministrasiUmumController extends Controller
             DB::commit();
 
             if ($request->ajax()) {
-                return response()->json([
-                    'success' => true,
-                    'message' => 'Order perbaikan berhasil diperbarui',
-                    'data' => $orderPerbaikan->fresh()
-                ]);
+                return response()->json(['success' => true, 'message' => 'Order perbaikan berhasil diperbarui']);
             }
 
             return redirect()
@@ -607,16 +576,7 @@ class AdministrasiUmumController extends Controller
 
         } catch (\Exception $e) {
             DB::rollBack();
-            
-            if ($request->ajax()) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Terjadi kesalahan saat memperbarui order: ' . $e->getMessage()
-                ], 500);
-            }
-
-            return redirect()
-                ->back()
+            return redirect()->back()
                 ->with('error', 'Terjadi kesalahan saat memperbarui order: ' . $e->getMessage())
                 ->withInput();
         }

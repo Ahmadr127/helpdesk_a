@@ -45,7 +45,7 @@
         </div>
 
         <div class="mb-4">
-            <h4 class="text-sm font-semibold text-gray-900 mb-2">{{ $order->title }}</h4>
+            <h4 class="text-sm font-semibold text-gray-900 mb-2">{{ $order->nomor }}</h4>
             <div class="grid grid-cols-2 gap-4 mb-3">
                 <div class="text-xs">
                     <p class="text-gray-500 mb-1">Peminta:</p>
@@ -53,14 +53,18 @@
                 </div>
                 <div class="text-xs">
                     <p class="text-gray-500 mb-1">Lokasi:</p>
-                    <p class="font-medium text-gray-900">{{ $order->location->name }}</p>
+                    <p class="font-medium text-gray-900">{{ $order->location?->name ?? '-' }}</p>
                 </div>
-                <div class="text-xs col-span-2">
-                    <p class="text-gray-500 mb-1">Barang:</p>
-                    <p class="font-medium text-gray-900">{{ $order->nama_barang }}</p>
+                <div class="text-xs">
+                    <p class="text-gray-500 mb-1">Kategori:</p>
+                    <p class="font-medium text-gray-900">{{ $order->category?->name ?? '-' }}</p>
+                </div>
+                <div class="text-xs">
+                    <p class="text-gray-500 mb-1">Departemen:</p>
+                    <p class="font-medium text-gray-900">{{ $order->department?->name ?? '-' }}</p>
                 </div>
             </div>
-            <p class="text-sm text-gray-600 line-clamp-2">{{ $order->description }}</p>
+            <p class="text-sm text-gray-600 line-clamp-2">{{ $order->keluhan }}</p>
         </div>
 
         <div class="flex items-center justify-between text-xs border-t border-gray-100 pt-4">

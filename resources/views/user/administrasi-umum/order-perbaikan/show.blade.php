@@ -144,7 +144,8 @@ document.addEventListener('DOMContentLoaded', function() {
         <!-- Order Details -->
         <div class="p-3">
             <!-- Main Info Grid -->
-            <div class="grid grid-cols-3 gap-3">
+            @php $hasItemInfo = $order->nama_barang || $order->jenis_barang || $order->kode_inventaris || $order->unit_proses; @endphp
+            <div class="grid {{ $hasItemInfo ? 'grid-cols-3' : 'grid-cols-2' }} gap-3">
                 <div class="bg-gray-50 p-2.5 rounded-lg">
                     <h3 class="text-base font-semibold mb-2">Informasi Order</h3>
                     <div class="grid grid-cols-2 gap-2">
@@ -158,8 +159,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         </div>
                         <div class="space-y-0.5">
                             <p class="text-xs text-gray-500">Status</p>
-                            <span
-                                class="inline-flex px-2 py-0.5 text-xs rounded-full {{ $order->getStatusBadgeClass() }}">
+                            <span class="inline-flex px-2 py-0.5 text-xs rounded-full {{ $order->getStatusBadgeClass() }}">
                                 {{ $order->getStatusText() }}
                             </span>
                         </div>
@@ -175,22 +175,7 @@ document.addEventListener('DOMContentLoaded', function() {
                                 {{ $order->prioritas }}
                             </span>
                         </div>
-                    </div>
-                </div>
-
-                <div class="bg-gray-50 p-2.5 rounded-lg">
-                    <h3 class="text-base font-semibold mb-2">Informasi Unit</h3>
-                    <div class="grid grid-cols-2 gap-2">
-                        <div class="space-y-0.5">
-                            <p class="text-xs text-gray-500">Unit Proses</p>
-                            <p class="text-sm font-medium">{{ $order->unit_proses_name }} ({{ $order->unit_proses }})
-                            </p>
-                        </div>
-                        <div class="space-y-0.5">
-                            <p class="text-xs text-gray-500">Unit Penerima</p>
-                            <p class="text-sm font-medium">{{ $order->unit_penerima }}</p>
-                        </div>
-                        <div class="space-y-0.5">
+                        <div class="space-y-0.5 col-span-2">
                             <p class="text-xs text-gray-500">Peminta</p>
                             <p class="text-sm font-medium">{{ $order->nama_peminta }}</p>
                         </div>
@@ -198,26 +183,58 @@ document.addEventListener('DOMContentLoaded', function() {
                 </div>
 
                 <div class="bg-gray-50 p-2.5 rounded-lg">
-                    <h3 class="text-base font-semibold mb-2">Informasi Barang</h3>
+                    <h3 class="text-base font-semibold mb-2">Kategori & Lokasi</h3>
                     <div class="grid grid-cols-1 gap-2">
                         <div class="space-y-0.5">
-                            <p class="text-xs text-gray-500">Jenis Barang</p>
-                            <p class="text-sm font-medium">{{ $order->jenis_barang }}</p>
+                            <p class="text-xs text-gray-500">Kategori</p>
+                            <p class="text-sm font-medium">{{ $order->category?->name ?? '-' }}</p>
                         </div>
                         <div class="space-y-0.5">
-                            <p class="text-xs text-gray-500">Kode Inventaris</p>
-                            <p class="text-sm font-medium">{{ $order->kode_inventaris }}</p>
+                            <p class="text-xs text-gray-500">Departemen</p>
+                            <p class="text-sm font-medium">{{ $order->department?->name ?? '-' }}</p>
                         </div>
+                        <div class="space-y-0.5">
+                            <p class="text-xs text-gray-500">Lokasi</p>
+                            <p class="text-sm font-medium">{{ $order->location?->name ?? '-' }}</p>
+                        </div>
+                        <div class="space-y-0.5">
+                            <p class="text-xs text-gray-500">Gedung</p>
+                            <p class="text-sm font-medium">{{ $order->building?->name ?? '-' }}</p>
+                        </div>
+                    </div>
+                </div>
+
+                @if($order->nama_barang || $order->jenis_barang || $order->kode_inventaris || $order->unit_proses)
+                <div class="bg-gray-50 p-2.5 rounded-lg">
+                    <h3 class="text-base font-semibold mb-2">Informasi Barang <span class="text-xs text-gray-400 font-normal">(opsional)</span></h3>
+                    <div class="grid grid-cols-1 gap-2">
+                        @if($order->nama_barang)
                         <div class="space-y-0.5">
                             <p class="text-xs text-gray-500">Nama Barang</p>
                             <p class="text-sm font-medium">{{ $order->nama_barang }}</p>
                         </div>
+                        @endif
+                        @if($order->jenis_barang)
                         <div class="space-y-0.5">
-                            <p class="text-xs text-gray-500">Lokasi</p>
-                            <p class="text-sm font-medium">{{ $order->location->name }}</p>
+                            <p class="text-xs text-gray-500">Jenis Barang</p>
+                            <p class="text-sm font-medium">{{ $order->jenis_barang }}</p>
                         </div>
+                        @endif
+                        @if($order->kode_inventaris)
+                        <div class="space-y-0.5">
+                            <p class="text-xs text-gray-500">Kode Inventaris</p>
+                            <p class="text-sm font-medium">{{ $order->kode_inventaris }}</p>
+                        </div>
+                        @endif
+                        @if($order->unit_proses)
+                        <div class="space-y-0.5">
+                            <p class="text-xs text-gray-500">Unit Proses</p>
+                            <p class="text-sm font-medium">{{ $order->unit_proses_name }} ({{ $order->unit_proses }})</p>
+                        </div>
+                        @endif
                     </div>
                 </div>
+                @endif
             </div>
 
             <!-- Keluhan and Foto Grid -->

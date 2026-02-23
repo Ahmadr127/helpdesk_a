@@ -159,7 +159,7 @@
                         </th>
                         <th scope="col"
                             class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
-                            Barang
+                            Kategori / Dept
                         </th>
                         <th scope="col"
                             class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
@@ -194,7 +194,8 @@
                             {{ $order->nama_penanggung_jawab }}
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                            {{ $order->nama_barang }}
+                            <div>{{ $order->category?->name ?? '-' }}</div>
+                            <div class="text-xs text-gray-400">{{ $order->department?->name ?? '-' }}</div>
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap">
                             <span

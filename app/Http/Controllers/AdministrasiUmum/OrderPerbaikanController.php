@@ -33,15 +33,15 @@ class OrderPerbaikanController extends Controller
 
     public function index(Request $request)
     {
-        $query = OrderPerbaikan::with(['creator', 'history', 'location']);
+        $query = OrderPerbaikan::with(['creator', 'history', 'location', 'category', 'department', 'building']);
 
         // Apply search filter
         if ($request->filled('search')) {
             $search = $request->search;
             $query->where(function($q) use ($search) {
                 $q->where('nomor', 'like', "%{$search}%")
-                  ->orWhere('nama_barang', 'like', "%{$search}%")
-                  ->orWhere('nama_peminta', 'like', "%{$search}%");
+                  ->orWhere('nama_peminta', 'like', "%{$search}%")
+                  ->orWhere('keluhan', 'like', "%{$search}%");
             });
         }
 
@@ -115,7 +115,7 @@ class OrderPerbaikanController extends Controller
 
     public function inProgress(Request $request)
     {
-        $query = OrderPerbaikan::with(['creator', 'location'])
+        $query = OrderPerbaikan::with(['creator', 'history', 'location', 'category', 'department'])
             ->where('status', 'in_progress');
             
         // Apply search filter
@@ -123,10 +123,8 @@ class OrderPerbaikanController extends Controller
             $search = $request->search;
             $query->where(function($q) use ($search) {
                 $q->where('nomor', 'like', "%{$search}%")
-                  ->orWhere('nama_barang', 'like', "%{$search}%")
                   ->orWhere('nama_peminta', 'like', "%{$search}%")
-                  ->orWhere('keluhan', 'like', "%{$search}%")
-                  ->orWhere('kode_inventaris', 'like', "%{$search}%");
+                  ->orWhere('keluhan', 'like', "%{$search}%");
             });
         }
         
@@ -171,7 +169,7 @@ class OrderPerbaikanController extends Controller
 
     public function confirmed(Request $request)
     {
-        $query = OrderPerbaikan::with(['creator', 'history'])
+        $query = OrderPerbaikan::with(['creator', 'history', 'category', 'department'])
             ->where('status', 'confirmed');
 
         // Apply search filter
@@ -179,7 +177,6 @@ class OrderPerbaikanController extends Controller
             $search = $request->search;
             $query->where(function($q) use ($search) {
                 $q->where('nomor', 'like', "%{$search}%")
-                  ->orWhere('nama_barang', 'like', "%{$search}%")
                   ->orWhere('nama_peminta', 'like', "%{$search}%")
                   ->orWhere('keluhan', 'like', "%{$search}%");
             });
@@ -209,7 +206,7 @@ class OrderPerbaikanController extends Controller
 
     public function rejected(Request $request)
     {
-        $query = OrderPerbaikan::with(['creator', 'history'])
+        $query = OrderPerbaikan::with(['creator', 'history', 'category', 'department'])
             ->where('status', 'rejected');
 
         // Apply search filter
@@ -217,7 +214,6 @@ class OrderPerbaikanController extends Controller
             $search = $request->search;
             $query->where(function($q) use ($search) {
                 $q->where('nomor', 'like', "%{$search}%")
-                  ->orWhere('nama_barang', 'like', "%{$search}%")
                   ->orWhere('nama_peminta', 'like', "%{$search}%")
                   ->orWhere('keluhan', 'like', "%{$search}%");
             });
@@ -262,7 +258,7 @@ class OrderPerbaikanController extends Controller
 
     public function show(OrderPerbaikan $orderPerbaikan)
     {
-        $orderPerbaikan->load(['creator', 'history.creator', 'location']);
+        $orderPerbaikan->load(['creator', 'history.creator', 'location', 'category', 'department', 'building']);
         
         // Direct to specific view based on status
         switch($orderPerbaikan->status) {
@@ -463,14 +459,13 @@ class OrderPerbaikanController extends Controller
 
     public function total(Request $request)
     {
-        $query = OrderPerbaikan::with(['creator', 'history']);
+        $query = OrderPerbaikan::with(['creator', 'history', 'category', 'department']);
 
         // Apply search filter
         if ($request->filled('search')) {
             $search = $request->search;
             $query->where(function($q) use ($search) {
                 $q->where('nomor', 'like', "%{$search}%")
-                  ->orWhere('nama_barang', 'like', "%{$search}%")
                   ->orWhere('nama_peminta', 'like', "%{$search}%")
                   ->orWhere('keluhan', 'like', "%{$search}%");
             });

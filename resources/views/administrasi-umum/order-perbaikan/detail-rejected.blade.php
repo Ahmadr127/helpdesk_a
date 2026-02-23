@@ -31,12 +31,12 @@
             <!-- Primary details -->
             <div class="grid grid-cols-2 md:grid-cols-4 gap-8 mb-10">
                 <div>
-                    <p class="text-sm font-medium text-blue-600 uppercase tracking-wider mb-2">Tanggal</p>
-                    <p class="text-base text-gray-800">{{ $order->created_at->format('d-m-Y H:i') }}</p>
+                    <p class="text-sm font-medium text-blue-600 uppercase tracking-wider mb-2">Kategori</p>
+                    <p class="text-base text-gray-800">{{ $order->category?->name ?? '-' }}</p>
                 </div>
                 <div>
-                    <p class="text-sm font-medium text-blue-600 uppercase tracking-wider mb-2">Peminta</p>
-                    <p class="text-base text-gray-800">{{ $order->creator->name }}</p>
+                    <p class="text-sm font-medium text-blue-600 uppercase tracking-wider mb-2">Departemen</p>
+                    <p class="text-base text-gray-800">{{ $order->department?->name ?? '-' }}</p>
                 </div>
                 <div>
                     <p class="text-sm font-medium text-blue-600 uppercase tracking-wider mb-2">Prioritas</p>
@@ -44,7 +44,7 @@
                 </div>
                 <div>
                     <p class="text-sm font-medium text-blue-600 uppercase tracking-wider mb-2">Lokasi</p>
-                    <p class="text-base text-gray-800">{{ $order->location->name ?? '-' }}</p>
+                    <p class="text-base text-gray-800">{{ $order->location?->name ?? '-' }}</p>
                 </div>
             </div>
 
@@ -53,31 +53,32 @@
                 <!-- Left Column -->
                 <div>
                     <div class="mb-8">
-                        <p class="text-sm font-medium text-blue-600 uppercase tracking-wider mb-2">Unit Proses</p>
-                        <p class="text-base text-gray-800">{{ $order->unit_proses }}</p>
+                        <p class="text-sm font-medium text-blue-600 uppercase tracking-wider mb-2">Tanggal Order</p>
+                        <p class="text-base text-gray-800">{{ $order->created_at->format('d-m-Y H:i') }}</p>
                     </div>
-
                     <div class="mb-8">
-                        <p class="text-sm font-medium text-blue-600 uppercase tracking-wider mb-2">Unit Penerima</p>
-                        <p class="text-base text-gray-800">{{ $order->unit_penerima }}</p>
+                        <p class="text-sm font-medium text-blue-600 uppercase tracking-wider mb-2">Peminta</p>
+                        <p class="text-base text-gray-800">{{ $order->creator->name }}</p>
                     </div>
-
+                    @if($order->nama_barang)
                     <div>
-                        <p class="text-sm font-medium text-blue-600 uppercase tracking-wider mb-2">Jenis Barang</p>
-                        <p class="text-base text-gray-800">{{ $order->jenis_barang }}</p>
+                        <p class="text-sm font-medium text-blue-600 uppercase tracking-wider mb-2">Nama Barang</p>
+                        <p class="text-base text-gray-800">{{ $order->nama_barang }}</p>
                     </div>
+                    @endif
                 </div>
 
                 <!-- Right Column -->
                 <div>
-                    <div class="mb-8">
-                        <p class="text-sm font-medium text-blue-600 uppercase tracking-wider mb-2">Nama Barang</p>
-                        <p class="text-base text-gray-800">{{ $order->nama_barang }}</p>
-                    </div>
-
+                    @if($order->kode_inventaris)
                     <div class="mb-8">
                         <p class="text-sm font-medium text-blue-600 uppercase tracking-wider mb-2">Kode Inventaris</p>
-                        <p class="text-base text-gray-800">{{ $order->kode_inventaris ?: '-' }}</p>
+                        <p class="text-base text-gray-800">{{ $order->kode_inventaris }}</p>
+                    </div>
+                    @endif
+                    <div class="mb-8">
+                        <p class="text-sm font-medium text-blue-600 uppercase tracking-wider mb-2">Gedung</p>
+                        <p class="text-base text-gray-800">{{ $order->building?->name ?? '-' }}</p>
                     </div>
                 </div>
             </div>

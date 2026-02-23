@@ -23,6 +23,7 @@ class OrderPerbaikan extends Model
         'unit_proses',
         'unit_proses_name',
         'unit_penerima',
+        'nip_peminta',
         'nama_peminta',
         'jenis_barang',
         'kode_inventaris',
@@ -34,6 +35,9 @@ class OrderPerbaikan extends Model
         'follow_up',
         'nama_penanggung_jawab',
         'foto',
+        'department_id',
+        'category_id',
+        'building_id',
         'created_by',
         'updated_by'
     ];
@@ -61,6 +65,21 @@ class OrderPerbaikan extends Model
     public function location()
     {
         return $this->belongsTo(Location::class, 'lokasi');
+    }
+
+    public function department()
+    {
+        return $this->belongsTo(Department::class, 'department_id');
+    }
+
+    public function category()
+    {
+        return $this->belongsTo(Category::class, 'category_id');
+    }
+
+    public function building()
+    {
+        return $this->belongsTo(Building::class, 'building_id');
     }
 
     // Status helper methods
