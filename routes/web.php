@@ -96,10 +96,8 @@ Route::middleware(['auth'])->group(function () {
             ->name('filter.status')
             ->where('status', 'all|open|pending|in_progress|closed|confirmed');
         Route::post('/{ticket}/confirm', [TicketController::class, 'confirm'])->name('confirm');
-        Route::post('/{ticket}/reply', [TicketController::class, 'reply'])->name('reply');
+        Route::delete('/{ticket}', [TicketController::class, 'destroy'])->name('destroy');
     });
-    Route::post('/tickets/{ticket}/reply', [TicketController::class, 'reply'])->name('user.ticket.reply');
-    Route::delete('/tickets/{ticket}', [TicketController::class, 'destroy'])->name('user.ticket.destroy');
     
     Route::get('/faq', [FAQController::class, 'index'])->name('user.faq');
     Route::get('/knowledge-base', [KnowledgeBaseController::class, 'index'])->name('user.knowledge-base');
