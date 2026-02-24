@@ -23,10 +23,10 @@
 
         <div class="bg-white rounded-lg shadow-md overflow-hidden">
             <!-- Header -->
-            <div class="bg-gradient-to-r from-green-600 to-blue-300 px-6 py-4 flex justify-between items-center">
-                <h2 class="text-2xl font-bold text-white">Buat Order Perbaikan Baru</h2>
+            <div class="bg-gradient-to-r from-blue-700 to-indigo-500 px-6 py-4 flex justify-between items-center">
+                <h2 class="text-2xl font-bold text-white">Permintaan Perbaikan IPSRS</h2>
                 <a href="{{ route('user.administrasi-umum.order-barang') }}"
-                    class="inline-flex items-center px-4 py-2 bg-green-600 bg-opacity-80 rounded-lg text-white hover:bg-opacity-30 transition-colors">
+                    class="inline-flex items-center px-4 py-2 bg-blue-700 bg-opacity-80 rounded-lg text-white hover:bg-opacity-30 transition-colors">
                     <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
                     </svg>
@@ -51,7 +51,7 @@
                     <div>
                         <label for="keluhan" class="block text-sm font-medium text-gray-700 mb-1">Deskripsi / Keluhan</label>
                         <textarea name="keluhan" id="keluhan" rows="4"
-                            class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors @error('keluhan') border-red-400 @enderror"
+                            class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors @error('keluhan') border-red-400 @enderror"
                             placeholder="Jelaskan masalah yang Anda alami..."
                             required>{{ old('keluhan') }}</textarea>
                         @error('keluhan')
@@ -64,7 +64,7 @@
                         <div>
                             <label for="category_id" class="block text-sm font-medium text-gray-700 mb-1">Kategori</label>
                             <select name="category_id" id="category_id"
-                                class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors @error('category_id') border-red-400 @enderror"
+                                class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors @error('category_id') border-red-400 @enderror"
                                 required>
                                 <option value="">Pilih Kategori</option>
                                 @foreach($categories as $category)
@@ -101,7 +101,7 @@
                         <div>
                             <label for="lokasi" class="block text-sm font-medium text-gray-700 mb-1">Lokasi</label>
                             <select name="lokasi" id="lokasi"
-                                class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors @error('lokasi') border-red-400 @enderror"
+                                class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors @error('lokasi') border-red-400 @enderror"
                                 required onchange="updateBuilding()">
                                 <option value="">Pilih Lokasi</option>
                                 @foreach($locations as $location)
@@ -138,7 +138,7 @@
                         <div>
                             <label for="prioritas" class="block text-sm font-medium text-gray-700 mb-1">Prioritas</label>
                             <select name="prioritas" id="prioritas"
-                                class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors @error('prioritas') border-red-400 @enderror"
+                                class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors @error('prioritas') border-red-400 @enderror"
                                 required>
                                 <option value="">Pilih Prioritas</option>
                                 <option value="RENDAH" {{ old('prioritas') === 'RENDAH' ? 'selected' : '' }}>Rendah</option>
@@ -176,7 +176,7 @@
                             Batal
                         </a>
                         <button type="submit"
-                            class="px-6 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition-colors">
+                            class="px-6 py-2 bg-blue-700 text-white rounded-md hover:bg-blue-800 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors">
                             Buat Order
                         </button>
                     </div>

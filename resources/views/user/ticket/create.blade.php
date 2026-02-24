@@ -37,7 +37,7 @@
             <div class="bg-white rounded-lg shadow-md overflow-hidden">
                 <!-- Header -->
                 <div class="bg-gradient-to-r from-green-600 to-blue-300 px-6 py-4 flex justify-between items-center">
-                    <h2 class="text-2xl font-bold text-white">Buat Tiket Dukungan Baru</h2>
+                    <h2 class="text-2xl font-bold text-white">Tiketing SIRS</h2>
                     <a href="{{ route('user.ticket.index') }}"
                         class="inline-flex items-center px-4 py-2 bg-green-600 bg-opacity-80 rounded-lg text-white hover:bg-opacity-30 transition-colors">
                         <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"
