@@ -40,7 +40,7 @@
         </span>
     </td>
     <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-        <button onclick="showOrderDetail('{{ $order->id }}')" class="text-blue-600 hover:text-blue-900">Detail</button>
+        <button onclick="showOrderDetail('{{ $order->id }}')" class="text-green-600 hover:text-green-900">Detail</button>
     </td>
 </tr>
 @empty

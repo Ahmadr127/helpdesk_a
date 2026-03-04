@@ -10,7 +10,7 @@
     <div class="max-w-5xl mx-auto">
         <div class="bg-white rounded-lg shadow-lg overflow-hidden">
             <!-- Header with gradient and back button -->
-            <div class="bg-gradient-to-r from-green-600 to-blue-300 px-6 py-4 flex justify-between items-center">
+            <div class="bg-blue-600 px-6 py-4 flex justify-between items-center">
                 <h2 class="text-xl font-bold text-white flex items-center">
                     <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"
                         xmlns="http://www.w3.org/2000/svg">
@@ -21,7 +21,7 @@
                     Edit Tiket #{{ $ticket->ticket_number }}
                 </h2>
                 <a href="{{ route('user.ticket.index') }}"
-                    class="inline-flex items-center text-white hover:text-blue-100 transition-colors bg-green-600 hover:bg-green-800 px-3 py-2 rounded-md">
+                    class="inline-flex items-center text-blue-700 font-medium transition-colors bg-blue-100 hover:bg-blue-200 px-3 py-2 rounded-md">
                     <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"
                         xmlns="http://www.w3.org/2000/svg">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -224,7 +224,7 @@
                             Batal
                         </a>
                         <button type="submit"
-                            class="px-6 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors">
+                            class="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors">
                             Perbarui Tiket
                         </button>
                     </div>

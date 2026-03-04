@@ -8,11 +8,11 @@
 <div class="container mx-auto max-w-6xl p-2 mt-6">
     <div class="bg-white rounded-lg shadow-lg mb-4">
         <!-- Header -->
-        <div class="bg-gradient-to-r from-green-400 to-blue-300 p-3 rounded-t-lg">
+        <div class="bg-green-600 p-3 rounded-t-lg">
             <div class="flex justify-between items-center">
                 <h1 class="text-xl font-semibold text-white">Edit Order Perbaikan</h1>
                 <a href="{{ route('user.administrasi-umum.order-perbaikan.show', $orderPerbaikan) }}"
-                    class="inline-flex items-center px-3 py-1.5 bg-white/10 hover:bg-white/20 text-white text-sm font-medium rounded-md transition">
+                    class="inline-flex items-center px-3 py-1.5 bg-green-500 hover:bg-green-700 text-white text-sm font-medium rounded-md transition">
                     <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
                     </svg>

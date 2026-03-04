@@ -4,18 +4,17 @@
 
 @section('content')
 <meta name="csrf-token" content="{{ csrf_token() }}">
-<div class="min-h-screen bg-gradient-to-r from-green-50 to-blue-50 pb-24">
+<div class="min-h-screen bg-green-50 pb-24">
     <div class="container mx-auto px-4 py-6">
         <!-- Page Header -->
-        <div class="mb-6 bg-gradient-to-r from-green-600 to-blue-300 rounded-lg p-6 shadow-sm">
+        <div class="mb-6 bg-green-600 rounded-lg p-6 shadow-sm">
             <div class="flex justify-between items-center">
                 <div>
                     <h1 class="text-3xl font-bold text-white">Permintaan Barang - Ditolak</h1>
                     <p class="mt-2 text-sm text-white">Daftar permintaan barang yang ditolak</p>
                 </div>
                 <div class="flex space-x-3">
-                    <a href="{{ route('user.administrasi-umum.order-barang') }}"
-                        class="inline-flex items-center px-4 py-2 bg-white/10 hover:bg-gray-500 hover:shadow-lg transform hover:-translate-y-0.5 transition-all duration-200 text-white text-sm font-medium rounded-lg cursor-pointer">
+                        class="inline-flex items-center px-4 py-2 bg-green-500 hover:bg-green-700 hover:shadow-lg transform hover:-translate-y-0.5 transition-all duration-200 text-white text-sm font-medium rounded-lg cursor-pointer">
                         <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M11 17l-5-5m0 0l5-5m-5 5h12"></path>
@@ -34,7 +33,7 @@
                     <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
                         <div class="relative">
                             <input type="text" id="search" name="search"
-                                class="w-full pl-10 pr-4 py-2 bg-white border border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors duration-200"
+                                class="w-full pl-10 pr-4 py-2 bg-white border border-gray-200 rounded-lg text-sm focus:border-green-500 focus:ring-1 focus:ring-green-500 transition-colors duration-200"
                                 placeholder="Cari nomor permintaan, nama barang...">
                             <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                                 <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor"
@@ -46,17 +45,17 @@
                         </div>
                         <div>
                             <input type="date" id="start_date" name="start_date"
-                                class="w-full px-3 py-2 bg-white border border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors duration-200"
+                                class="w-full px-3 py-2 bg-white border border-gray-200 rounded-lg text-sm focus:border-green-500 focus:ring-1 focus:ring-green-500 transition-colors duration-200"
                                 placeholder="Tanggal Mulai">
                         </div>
                         <div>
                             <input type="date" id="end_date" name="end_date"
-                                class="w-full px-3 py-2 bg-white border border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors duration-200"
+                                class="w-full px-3 py-2 bg-white border border-gray-200 rounded-lg text-sm focus:border-green-500 focus:ring-1 focus:ring-green-500 transition-colors duration-200"
                                 placeholder="Tanggal Akhir">
                         </div>
                         <div>
                             <button id="filterDate"
-                                class="w-full px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+                                class="w-full px-4 py-2 bg-green-600 text-white text-sm font-medium rounded-lg hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2">
                                 <i class="fas fa-filter mr-1"></i> Terapkan Filter
                             </button>
                         </div>

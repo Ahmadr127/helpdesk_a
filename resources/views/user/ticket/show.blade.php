@@ -9,7 +9,7 @@
     <!-- Back Button -->
     <div class="mb-4">
         <a href="{{ route('user.ticket.index') }}"
-            class="inline-flex items-center px-3 py-2 bg-green-600 hover:bg-green-700 text-white text-sm font-medium rounded-md">
+            class="inline-flex items-center px-4 py-2 bg-white text-blue-600 border border-blue-600 hover:bg-blue-50 text-sm font-medium rounded-lg transition-colors">
             <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18">
                 </path>
@@ -28,7 +28,7 @@
                 @csrf
                 <input type="hidden" name="action" value="confirm">
                 <button type="button" onclick="openConfirmationModal('confirm')"
-                    class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors shadow-sm flex items-center text-sm">
+                    class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors shadow-sm flex items-center text-sm">
                     <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
                     </svg>
@@ -53,7 +53,7 @@
 
             @if($ticket->status === 'open')
             <a href="{{ route('user.ticket.edit', $ticket) }}"
-                class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors shadow-sm flex items-center text-sm">
+                class="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors shadow-sm flex items-center text-sm">
                 <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                         d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z">
@@ -88,7 +88,7 @@
         <div class="lg:col-span-2">
             <div class="bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden ticket-container">
                 <!-- Status Bar -->
-                <div class="bg-gradient-to-r from-green-600 to-blue-400 px-4 py-3 rounded-t-lg">
+                <div class="bg-blue-600 px-4 py-3 rounded-t-lg">
                     <div class="flex flex-col md:flex-row md:justify-between md:items-center space-y-2 md:space-y-0">
                         <div class="flex flex-wrap items-center gap-2">
                             <span class="px-3 py-1 text-sm leading-5 font-medium rounded-full 
@@ -96,7 +96,7 @@
                                ($ticket->status === 'in_progress' ? 'bg-purple-100 text-purple-800' : 
                                    ($ticket->status === 'pending' ? 'bg-yellow-100 text-yellow-800' : 
                                ($ticket->status === 'closed' ? 'bg-gray-100 text-gray-800' :
-                               'bg-green-100 text-green-800'))) }}">
+                               'bg-blue-100 text-blue-800'))) }}">
                                 {{ $ticket->status === 'open' ? 'Dibuka' : 
                                    ($ticket->status === 'in_progress' ? 'Dalam Proses' : 
                                    ($ticket->status === 'pending' ? 'Menunggu' : 
@@ -331,7 +331,7 @@
         <div class="lg:col-span-1">
             <div class="bg-white rounded-lg shadow-sm border border-gray-100 h-full conversation-container">
                 <!-- Conversation Header -->
-                <div class="bg-gradient-to-r from-blue-400 to-green-600 px-4 py-3 rounded-t-lg">
+                <div class="bg-blue-600 px-4 py-3 rounded-t-lg">
                     <h3 class="text-base font-medium text-white">Riwayat Percakapan</h3>
                 </div>
 
@@ -392,7 +392,7 @@
                             @else
                             <div class="bg-green-50 p-4 rounded-lg border border-green-100">
                                 <div class="flex justify-between items-start mb-2">
-                                    <div class="font-medium text-green-800">Anda</div>
+                                    <div class="font-medium text-blue-800">Anda</div>
                                     <div class="text-xs text-gray-500">
                                         {{ \Carbon\Carbon::parse($response['timestamp'])->format('d M Y H:i') }}
                                     </div>
@@ -404,7 +404,7 @@
                                 <p class="text-sm whitespace-pre-line text-gray-800">
                                     @if(isset($response['type']) && $response['type'] === 'confirm')
                                     <span
-                                        class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 mb-2">
+                                        class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 mb-2">
                                         <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
                                             <path fill-rule="evenodd"
                                                 d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
@@ -764,7 +764,7 @@ function openConfirmationModal(action) {
     // Update modal title and button based on action
     if (action === 'confirm') {
         modalTitle.textContent = 'Konfirmasi Penyelesaian Tiket';
-        submitButton.className = 'px-4 py-2 text-white bg-green-600 rounded-md hover:bg-green-700';
+        submitButton.className = 'px-4 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700';
         submitButton.textContent = 'Konfirmasi';
     } else {
         modalTitle.textContent = 'Laporkan Masalah';

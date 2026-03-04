@@ -6,8 +6,7 @@
 <div class="container px-6 mx-auto grid">
     <!-- Back Button -->
     <div class="mt-6">
-        <a href="{{ route('user.dashboard') }}"
-            class="inline-flex items-center px-4 py-2 bg-green-600 hover:bg-green-700 border border-transparent rounded-md shadow-sm text-sm text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
+            class="inline-flex items-center px-4 py-2 bg-white text-green-600 border border-green-600 hover:bg-green-50 rounded-md shadow-sm text-sm font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-colors">
             <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"
                 xmlns="http://www.w3.org/2000/svg">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
@@ -68,17 +67,17 @@
                 <div class="col-span-1">
                     <label class="block text-sm font-medium text-gray-700">Tanggal Mulai</label>
                     <input type="date" name="start_date" value="{{ request('start_date') }}"
-                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500">
                 </div>
                 <div class="col-span-1">
                     <label class="block text-sm font-medium text-gray-700">Tanggal Berakhir</label>
                     <input type="date" name="end_date" value="{{ request('end_date') }}"
-                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500">
                 </div>
                 <div class="col-span-1">
                     <label class="block text-sm font-medium text-gray-700">Nomor Order</label>
                     <input type="text" name="order_number" value="{{ request('order_number') }}"
-                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500"
                         placeholder="Cari nomor order...">
                 </div>
             </div>
@@ -88,7 +87,7 @@
                 <div>
                     <label class="block text-sm font-medium text-gray-700">Status</label>
                     <select name="status"
-                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500">
                         <option value="">Semua Status</option>
                         <option value="pending" {{ request('status') == 'pending' ? 'selected' : '' }}>Menunggu</option>
                         <option value="in_progress" {{ request('status') == 'in_progress' ? 'selected' : '' }}>Diproses
@@ -102,7 +101,7 @@
                 <div>
                     <label class="block text-sm font-medium text-gray-700">Prioritas</label>
                     <select name="priority"
-                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500">
                         <option value="">Semua Prioritas</option>
                         <option value="low" {{ request('priority') == 'low' ? 'selected' : '' }}>Rendah</option>
                         <option value="medium" {{ request('priority') == 'medium' ? 'selected' : '' }}>Sedang</option>
@@ -112,7 +111,7 @@
                 <div>
                     <label class="block text-sm font-medium text-gray-700">Kategori</label>
                     <select name="category"
-                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500">
                         <option value="">Semua Kategori</option>
                         @foreach($categories ?? [] as $category)
                         <option value="{{ $category->id }}" {{ request('category') == $category->id ? 'selected' : '' }}>
@@ -122,7 +121,7 @@
                     </select>
                 </div>
                 <div class="flex items-end space-x-4">
-                    <button type="submit" class="flex-1 bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">
+                    <button type="submit" class="flex-1 bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700">
                         Terapkan Filter
                     </button>
                     <button type="button" id="resetFilter"
@@ -189,11 +188,11 @@
                         <td class="px-4 py-3">
                             <div class="flex space-x-3">
                                 <a href="{{ route('user.administrasi-umum.order-perbaikan.show', $order) }}"
-                                    class="text-blue-600 hover:text-blue-900">Lihat</a>
+                                    class="text-green-600 hover:text-green-900">Lihat</a>
 
                                 @if($order->status === 'pending')
                                 <a href="{{ route('user.administrasi-umum.order-perbaikan.edit', $order) }}"
-                                    class="text-yellow-600 hover:text-yellow-900">Ubah</a>
+                                    class="text-blue-600 hover:text-blue-900">Ubah</a>
 
                                 <form action="{{ route('user.administrasi-umum.order-perbaikan.delete', $order) }}"
                                     method="POST"
