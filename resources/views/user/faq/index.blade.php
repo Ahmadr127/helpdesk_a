@@ -23,7 +23,7 @@
             </div>
 
             <!-- IPSRS Section -->
-            <div class="bg-gradient-to-r from-blue-300 to-blue-200 p-6 rounded-lg text-gray-800">
+            <div class="bg-gradient-to-r from-blue-600 to-blue-500 p-6 rounded-lg text-white">
                 <h2 class="text-xl font-bold mb-3">IPSRS (Instalasi Pemeliharaan Sarana Rumah Sakit)</h2>
                 <p class="mb-4">Layanan untuk pemeliharaan dan perbaikan sarana fisik:</p>
                 <ul class="list-disc pl-5 space-y-2">
@@ -53,7 +53,7 @@
             </a>
             <a href="#create-order"
                 class="bg-blue-50 hover:bg-blue-100 p-4 rounded-lg border border-blue-200 flex items-center transition duration-200">
-                <div class="rounded-full bg-blue-300 p-3 mr-4">
+                <div class="rounded-full bg-blue-600 p-3 mr-4">
                     <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01">
@@ -130,8 +130,8 @@
 
             <!-- IPSRS Order Guide Section -->
             <div id="create-order" class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden h-full">
-                <div class="bg-gradient-to-r from-blue-300 to-blue-200 px-6 py-4 border-b border-gray-100">
-                    <h2 class="text-xl font-semibold text-gray-800">Panduan Order IPSRS</h2>
+                <div class="bg-gradient-to-r from-blue-600 to-blue-500 px-6 py-4 border-b border-gray-100">
+                    <h2 class="text-xl font-semibold text-white">Panduan Order IPSRS</h2>
                 </div>
                 <div class="p-6">
                     <div class="space-y-6">
@@ -139,7 +139,7 @@
                         <div class="bg-gray-50 p-4 rounded-lg">
                             <h3 class="text-lg font-medium text-gray-800 mb-2 flex items-center">
                                 <span
-                                    class="flex items-center justify-center bg-blue-300 text-white rounded-full w-6 h-6 mr-2 text-sm">1</span>
+                                    class="flex items-center justify-center bg-blue-600 text-white rounded-full w-6 h-6 mr-2 text-sm">1</span>
                                 Akses Halaman IPSRS
                             </h3>
                             <p class="text-gray-600 mb-2">Untuk membuat order perbaikan sarana, pilih menu "Administrasi
@@ -150,7 +150,7 @@
                         <div class="bg-gray-50 p-4 rounded-lg">
                             <h3 class="text-lg font-medium text-gray-800 mb-2 flex items-center">
                                 <span
-                                    class="flex items-center justify-center bg-blue-300 text-white rounded-full w-6 h-6 mr-2 text-sm">2</span>
+                                    class="flex items-center justify-center bg-blue-600 text-white rounded-full w-6 h-6 mr-2 text-sm">2</span>
                                 Detail Perbaikan
                             </h3>
                             <p class="text-gray-600 mb-3">Lengkapi informasi perbaikan yang dibutuhkan:</p>
@@ -169,7 +169,7 @@
                         <div class="bg-gray-50 p-4 rounded-lg">
                             <h3 class="text-lg font-medium text-gray-800 mb-2 flex items-center">
                                 <span
-                                    class="flex items-center justify-center bg-blue-300 text-white rounded-full w-6 h-6 mr-2 text-sm">3</span>
+                                    class="flex items-center justify-center bg-blue-600 text-white rounded-full w-6 h-6 mr-2 text-sm">3</span>
                                 Proses Perbaikan
                             </h3>
                             <p class="text-gray-600 mb-2">Tim IPSRS akan menindaklanjuti dan melakukan perbaikan sesuai
