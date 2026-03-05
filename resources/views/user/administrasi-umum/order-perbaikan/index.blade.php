@@ -141,7 +141,8 @@
                     <tr
                         class="text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b bg-gray-50">
                         <th class="px-4 py-3">Nomor Order</th>
-                        <th class="px-4 py-3">Kategori / Dept</th>
+                        <th class="px-4 py-3">Kategori</th>
+                        <th class="px-4 py-3">Departemen</th>
                         <th class="px-4 py-3">Keluhan</th>
                         <th class="px-4 py-3">Lokasi</th>
                         <th class="px-4 py-3">Status</th>
@@ -156,6 +157,8 @@
                         <td class="px-4 py-3">{{ $order->nomor }}</td>
                         <td class="px-4 py-3">
                             <div class="text-sm">{{ $order->category?->name ?? '-' }}</div>
+                        </td>
+                        <td class="px-4 py-3">
                             <div class="text-xs text-gray-500">{{ $order->department?->name ?? '-' }}</div>
                         </td>
                         <td class="px-4 py-3 max-w-xs">
