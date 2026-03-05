@@ -2,10 +2,7 @@
     <thead class="bg-gray-50">
         <tr>
             <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Nomor Order
-            </th>
-            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Tanggal
+                No Order
             </th>
             <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 Peminta
@@ -19,6 +16,15 @@
             <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 Status
             </th>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Tanggal Dibuat
+            </th>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Waktu Proses
+            </th>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Tanggal Konfirmasi
+            </th>
             <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-20">
                 Aksi
             </th>
@@ -29,9 +35,6 @@
         <tr class="hover:bg-gray-50 transition-colors duration-150">
             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                 {{ $order->nomor }}
-            </td>
-            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                {{ $order->tanggal->format('d/m/Y H:i') }}
             </td>
             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                 {{ $order->nama_peminta }}
@@ -61,6 +64,30 @@
                     } }}
                 </span>
             </td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                {{ $order->created_at->format('d/m/Y H:i') }}
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                @if($order->started_at)
+                    {{ \Carbon\Carbon::parse($order->started_at)->format('d/m/Y H:i') }}
+                @else
+                    -
+                @endif
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                @if($order->status === 'confirmed' || $order->status === 'rejected')
+                    @php 
+                        $history = $order->history->where('status', $order->status)->first(); 
+                    @endphp
+                    @if($history)
+                        {{ \Carbon\Carbon::parse($history->created_at)->format('d/m/Y H:i') }}
+                    @else
+                        -
+                    @endif
+                @else
+                    -
+                @endif
+            </td>
             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                 <a href="{{ route('administrasi-umum.order-perbaikan.show', $order) }}"
                     class="text-blue-600 hover:text-blue-900 inline-flex items-center">
@@ -77,8 +104,8 @@
         </tr>
         @empty
         <tr>
-            <td colspan="6" class="px-6 py-4 text-center text-sm text-gray-500 bg-white">
-                Tidak ada order untuk prioritas ini
+            <td colspan="9" class="px-6 py-4 text-center text-sm text-gray-500 bg-white">
+                Tidak ada order untuk status ini
             </td>
         </tr>
         @endforelse

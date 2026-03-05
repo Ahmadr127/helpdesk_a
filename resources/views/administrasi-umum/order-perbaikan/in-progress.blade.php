@@ -106,52 +106,37 @@
                 <thead class="bg-gradient-to-r from-blue-200 to-gray-200 border-b border-gray-200 rounded-t-lg">
                     <tr>
                         <th scope="col"
-                            class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">No.
-                            Order</th>
+                            class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">No. Order</th>
                         <th scope="col"
-                            class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
-                            Tanggal</th>
+                            class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">Peminta</th>
                         <th scope="col"
-                            class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
-                            Pemohon</th>
+                            class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">Kategori / Dept</th>
                         <th scope="col"
-                            class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
-                            Lokasi</th>
+                            class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">Keluhan</th>
                         <th scope="col"
-                            class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
-                            Kategori / Dept</th>
+                            class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">Prioritas</th>
                         <th scope="col"
-                            class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
-                            Keluhan</th>
+                            class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">Status</th>
                         <th scope="col"
-                            class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
-                            Prioritas</th>
+                            class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">Tanggal Dibuat</th>
                         <th scope="col"
-                            class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
-                            Penanggung Jawab</th>
+                            class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">Waktu Proses</th>
                         <th scope="col"
-                            class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
-                            Durasi</th>
+                            class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">Penanggung Jawab</th>
                         <th scope="col"
-                            class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">Aksi
-                        </th>
+                            class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">Aksi</th>
                     </tr>
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-200">
                     @forelse($orders as $order)
                     <tr class="hover:bg-gray-50">
                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                            {{ $order->nomor }}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                            {{ $order->created_at->format('d/m/Y') }}
-                            <div class="text-xs text-gray-400">{{ $order->created_at->format('H:i') }}</div>
+                            {{ $order->nomor }}
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                             {{ $order->nama_peminta }}
-                            <div class="text-xs text-gray-400">{{ $order->creator->email }}</div>
+                            <div class="text-xs text-gray-400">{{ optional($order->creator)->email }}</div>
                         </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                            {{ optional($order->location)->name ?? $order->lokasi }}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                             <div>{{ $order->category?->name ?? '-' }}</div>
                             <div class="text-xs text-gray-400">{{ $order->department?->name ?? '-' }}</div>
@@ -167,25 +152,40 @@
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                             <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
-                                {{ $order->prioritas === 'TINGGI/URGENT' ? 'bg-red-100 text-red-800' : '' }}
-                                {{ $order->prioritas === 'SEDANG' ? 'bg-yellow-100 text-yellow-800' : '' }}
-                                {{ $order->prioritas === 'RENDAH' ? 'bg-blue-100 text-blue-800' : '' }}">
-                                {{ $order->prioritas }}
+                                {{ match($order->prioritas) {
+                                    'TINGGI/URGENT' => 'bg-red-100 text-red-800',
+                                    'SEDANG' => 'bg-yellow-100 text-yellow-800',
+                                    'RENDAH' => 'bg-blue-100 text-blue-800',
+                                    default => 'bg-gray-100 text-gray-800'
+                                } }}">
+                                {{ match($order->prioritas) {
+                                    'TINGGI/URGENT' => 'Tinggi/Urgent',
+                                    'SEDANG' => 'Sedang',
+                                    'RENDAH' => 'Rendah',
+                                    default => $order->prioritas
+                                } }}
+                            </span>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full shadow-sm bg-yellow-100 text-yellow-800">
+                                Dalam Diproses
                             </span>
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                            {{ $order->nama_penanggung_jawab }}
-                            @if($order->started_at)
-                            <div class="text-xs text-gray-400">Mulai: {{ $order->started_at->format('d/m/Y H:i') }}
-                            </div>
-                            @endif
+                            {{ $order->created_at->format('d/m/Y') }}
+                            <div class="text-xs text-gray-400">{{ $order->created_at->format('H:i') }}</div>
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                             @if($order->started_at)
-                            {{ $order->started_at->diffForHumans(null, true) }}
+                                {{ \Carbon\Carbon::parse($order->started_at)->format('d/m/Y') }}
+                                <div class="text-xs text-gray-400">{{ \Carbon\Carbon::parse($order->started_at)->format('H:i') }}</div>
+                                <div class="text-xs text-blue-500 mt-1 font-medium">{{ \Carbon\Carbon::parse($order->started_at)->diffForHumans(null, true) }}</div>
                             @else
-                            -
+                                -
                             @endif
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                            {{ $order->nama_penanggung_jawab ?? '-' }}
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
                             <a href="{{ route('administrasi-umum.order-perbaikan.show', $order->id) }}"

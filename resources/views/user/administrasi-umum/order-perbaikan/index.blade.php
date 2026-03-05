@@ -143,6 +143,7 @@
                         <th class="px-4 py-3">Nomor Order</th>
                         <th class="px-4 py-3">Kategori / Dept</th>
                         <th class="px-4 py-3">Keluhan</th>
+                        <th class="px-4 py-3">Lokasi</th>
                         <th class="px-4 py-3">Status</th>
                         <th class="px-4 py-3">Prioritas</th>
                         <th class="px-4 py-3">Tanggal</th>
@@ -159,6 +160,9 @@
                         </td>
                         <td class="px-4 py-3 max-w-xs">
                             <p class="text-sm truncate">{{ $order->keluhan }}</p>
+                        </td>
+                        <td class="px-4 py-3">
+                            <span class="text-sm">{{ $order->lokasi ?? '-' }}</span>
                         </td>
                         <td class="px-4 py-3">
                             <span class="px-2 py-1 text-xs font-semibold rounded-full
@@ -208,7 +212,7 @@
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="7" class="px-4 py-3 text-center text-gray-500">
+                        <td colspan="8" class="px-4 py-3 text-center text-gray-500">
                             Tidak ada order ditemukan
                         </td>
                     </tr>

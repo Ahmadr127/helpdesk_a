@@ -256,11 +256,7 @@
                     <tr>
                         <th scope="col"
                             class="px-6 py-3.5 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Nomor Order
-                        </th>
-                        <th scope="col"
-                            class="px-6 py-3.5 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Tanggal
+                            No Order
                         </th>
                         <th scope="col"
                             class="px-6 py-3.5 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -276,15 +272,19 @@
                         </th>
                         <th scope="col"
                             class="px-6 py-3.5 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Lokasi
-                        </th>
-                        <th scope="col"
-                            class="px-6 py-3.5 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Prioritas
-                        </th>
-                        <th scope="col"
-                            class="px-6 py-3.5 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                             Status
+                        </th>
+                        <th scope="col"
+                            class="px-6 py-3.5 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Tanggal Dibuat
+                        </th>
+                        <th scope="col"
+                            class="px-6 py-3.5 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Waktu Proses
+                        </th>
+                        <th scope="col"
+                            class="px-6 py-3.5 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Tanggal Konfirmasi
                         </th>
                         <th scope="col"
                             class="px-6 py-3.5 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-20">
@@ -299,9 +299,6 @@
                             {{ $order->nomor }}
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                            {{ $order->tanggal->format('d/m/Y H:i') }}
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                             {{ $order->nama_peminta }}
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
@@ -310,25 +307,6 @@
                         </td>
                         <td class="px-6 py-4 text-sm text-gray-500 max-w-xs">
                             <p class="truncate">{{ $order->keluhan }}</p>
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                            {{ $order->location ? $order->location->name : '-' }}
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap">
-                            <span class="px-3 py-1.5 text-xs font-medium rounded-full shadow-sm 
-                                {{ match($order->prioritas) {
-                                    'TINGGI/URGENT' => 'bg-gradient-to-r from-red-50 to-red-100 text-red-800 border border-red-200',
-                                    'SEDANG' => 'bg-gradient-to-r from-yellow-50 to-yellow-100 text-yellow-800 border border-yellow-200',
-                                    'RENDAH' => 'bg-gradient-to-r from-blue-50 to-blue-100 text-blue-800 border border-blue-200',
-                                    default => 'bg-gradient-to-r from-gray-50 to-gray-100 text-gray-800 border border-gray-200'
-                                } }}">
-                                {{ match($order->prioritas) {
-                                    'TINGGI/URGENT' => 'Tinggi/Urgent',
-                                    'SEDANG' => 'Sedang',
-                                    'RENDAH' => 'Rendah',
-                                    default => $order->prioritas
-                                } }}
-                            </span>
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap">
                             <span class="px-3 py-1.5 text-xs font-medium rounded-full shadow-sm
@@ -348,6 +326,30 @@
                                 } }}
                             </span>
                         </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                            {{ $order->created_at->format('d/m/Y H:i') }}
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                            @if($order->started_at)
+                                {{ \Carbon\Carbon::parse($order->started_at)->format('d/m/Y H:i') }}
+                            @else
+                                -
+                            @endif
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                            @if($order->status === 'confirmed' || $order->status === 'rejected')
+                                @php 
+                                    $history = $order->history->where('status', $order->status)->first(); 
+                                @endphp
+                                @if($history)
+                                    {{ \Carbon\Carbon::parse($history->created_at)->format('d/m/Y H:i') }}
+                                @else
+                                    -
+                                @endif
+                            @else
+                                -
+                            @endif
+                        </td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                             <a href="{{ route('administrasi-umum.order-perbaikan.show', $order) }}"
                                 class="text-blue-600 hover:text-blue-900 inline-flex items-center hover:bg-blue-50 px-2.5 py-1.5 rounded-lg transition-colors duration-150">
@@ -364,7 +366,7 @@
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="8" class="px-6 py-10 text-center text-sm text-gray-500 bg-white">
+                        <td colspan="9" class="px-6 py-10 text-center text-sm text-gray-500 bg-white">
                             <div class="flex flex-col items-center justify-center">
                                 <svg class="w-12 h-12 text-gray-400 mb-3" fill="none" stroke="currentColor"
                                     viewBox="0 0 24 24">

@@ -4,24 +4,16 @@
         <div class="text-sm font-medium text-gray-900">{{ $order->nomor }}</div>
     </td>
     <td class="px-6 py-4 whitespace-nowrap">
-        <div class="text-sm text-gray-900">{{ $order->tanggal->format('d/m/Y H:i') }}</div>
-        @if($order->status == 'confirmed' || $order->status == 'rejected')
-        @php
-        $statusHistory = $order->history->where('status', $order->status)->first();
-        @endphp
-        @if($statusHistory)
-        <div class="text-xs text-gray-500">
-            Respon: {{ \Carbon\Carbon::parse($statusHistory->created_at)->format('d/m/Y H:i') }}
-        </div>
-        @endif
-        @endif
+        <div class="text-sm text-gray-900">{{ $order->category?->name ?? '-' }}</div>
     </td>
     <td class="px-6 py-4 whitespace-nowrap">
-        <div class="text-sm text-gray-900">{{ $order->category?->name ?? '-' }}</div>
-        <div class="text-xs text-gray-500">{{ $order->department?->name ?? '-' }}</div>
+        <div class="text-sm text-gray-900">{{ $order->department?->name ?? '-' }}</div>
     </td>
     <td class="px-6 py-4">
         <div class="text-sm text-gray-900">{{ $order->keluhan }}</div>
+    </td>
+    <td class="px-6 py-4 whitespace-nowrap">
+        <div class="text-sm text-gray-900">{{ $order->lokasi ?? '-' }}</div>
     </td>
     <td class="px-6 py-4 whitespace-nowrap">
         <span class="px-2 py-1 text-xs font-medium rounded-full {{ $order->getStatusBadgeClass() }}">
@@ -39,13 +31,22 @@
             {{ $order->prioritas }}
         </span>
     </td>
+    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+        {{ $order->tanggal->format('d/m/Y') }}
+        @if($order->status == 'confirmed' || $order->status == 'rejected')
+        @php $statusHistory = $order->history->where('status', $order->status)->first(); @endphp
+        @if($statusHistory)
+        <div class="text-xs text-gray-400">Respon: {{ \Carbon\Carbon::parse($statusHistory->created_at)->format('d/m/Y') }}</div>
+        @endif
+        @endif
+    </td>
     <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
         <button onclick="showOrderDetail('{{ $order->id }}')" class="text-green-600 hover:text-green-900">Detail</button>
     </td>
 </tr>
 @empty
 <tr>
-    <td colspan="7" class="px-6 py-4 text-center text-gray-500">
+    <td colspan="8" class="px-6 py-4 text-center text-gray-500">
         Tidak ada order yang ditemukan
     </td>
 </tr>

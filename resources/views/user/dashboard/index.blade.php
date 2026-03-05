@@ -237,13 +237,16 @@
                                         No Order</th>
                                     <th
                                         class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        Barang</th>
+                                        Keluhan</th>
                                     <th
                                         class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                         Status</th>
                                     <th
                                         class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                         Prioritas</th>
+                                    <th
+                                        class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        Tanggal</th>
                                 </tr>
                             </thead>
                             <tbody class="bg-white divide-y divide-gray-200">
@@ -255,7 +258,9 @@
                                             {{ $order->nomor }}
                                         </a>
                                     </td>
-                                    <td class="px-4 py-3 text-xs">{{ Str::limit($order->nama_barang, 30) }}</td>
+                                    <td class="px-4 py-3 text-xs text-gray-500 max-w-[150px]">
+                                        <p class="truncate" title="{{ $order->keluhan }}">{{ Str::limit($order->keluhan, 40) }}</p>
+                                    </td>
                                     <td class="px-4 py-3">
                                         <span class="px-2 py-1 text-xs leading-4 font-semibold rounded-full 
                                         {{ $order->status === 'open' ? 'bg-blue-100 text-blue-800' : 
@@ -279,10 +284,13 @@
                                             {{ $order->prioritas }}
                                         </span>
                                     </td>
+                                    <td class="px-4 py-3 whitespace-nowrap text-xs text-gray-500">
+                                        {{ $order->created_at->format('d M Y') }}
+                                    </td>
                                 </tr>
                                 @empty
                                 <tr>
-                                    <td colspan="4" class="px-4 py-6 text-center text-gray-500">
+                                    <td colspan="5" class="px-4 py-6 text-center text-gray-500">
                                         <div class="flex flex-col items-center">
                                             <svg class="w-10 h-10 text-gray-300 mb-2" fill="none" stroke="currentColor"
                                                 viewBox="0 0 24 24">

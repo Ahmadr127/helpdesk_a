@@ -119,15 +119,19 @@
                             </th>
                             <th scope="col"
                                 class="px-6 py-3 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">
-                                Tanggal
+                                Kategori
                             </th>
                             <th scope="col"
                                 class="px-6 py-3 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">
-                                Kategori / Dept
+                                Departemen
                             </th>
                             <th scope="col"
                                 class="px-6 py-3 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">
                                 Keluhan
+                            </th>
+                            <th scope="col"
+                                class="px-6 py-3 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">
+                                Lokasi
                             </th>
                             <th scope="col"
                                 class="px-6 py-3 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">
@@ -136,6 +140,10 @@
                             <th scope="col"
                                 class="px-6 py-3 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">
                                 Prioritas
+                            </th>
+                            <th scope="col"
+                                class="px-6 py-3 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">
+                                Tanggal
                             </th>
                             <th scope="col"
                                 class="px-6 py-3 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">
