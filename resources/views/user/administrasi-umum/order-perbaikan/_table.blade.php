@@ -8,17 +8,10 @@
     </td>
     <td class="px-6 py-4 whitespace-nowrap">
         <div class="text-sm text-gray-900">{{ $order->department?->name ?? '-' }}</div>
-    </td>
-    <td class="px-6 py-4">
-        <div class="text-sm text-gray-900">{{ $order->keluhan }}</div>
+        <div class="text-xs text-gray-500">{{ $order->building?->name ?? '-' }}</div>
     </td>
     <td class="px-6 py-4 whitespace-nowrap">
-        <div class="text-sm text-gray-900">{{ $order->lokasi ?? '-' }}</div>
-    </td>
-    <td class="px-6 py-4 whitespace-nowrap">
-        <span class="px-2 py-1 text-xs font-medium rounded-full {{ $order->getStatusBadgeClass() }}">
-            {{ $order->getStatusText() }}
-        </span>
+        <div class="text-sm text-gray-900">{{ $order->location?->name ?? $order->lokasi ?? '-' }}</div>
     </td>
     <td class="px-6 py-4 whitespace-nowrap">
         <span class="inline-flex px-2 py-1 text-xs rounded-full 
@@ -29,6 +22,11 @@
                 default => 'bg-gray-100 text-gray-800'
             } }}">
             {{ $order->prioritas }}
+        </span>
+    </td>
+    <td class="px-6 py-4 whitespace-nowrap">
+        <span class="px-2 py-1 text-xs font-medium rounded-full {{ $order->getStatusBadgeClass() }}">
+            {{ $order->getStatusText() }}
         </span>
     </td>
     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">

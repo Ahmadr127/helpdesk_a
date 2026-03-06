@@ -127,19 +127,15 @@
                             </th>
                             <th scope="col"
                                 class="px-6 py-3 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">
-                                Keluhan
-                            </th>
-                            <th scope="col"
-                                class="px-6 py-3 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">
                                 Lokasi
                             </th>
                             <th scope="col"
                                 class="px-6 py-3 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">
-                                Status
+                                Prioritas
                             </th>
                             <th scope="col"
                                 class="px-6 py-3 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">
-                                Prioritas
+                                Status
                             </th>
                             <th scope="col"
                                 class="px-6 py-3 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">

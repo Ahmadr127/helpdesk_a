@@ -13,7 +13,12 @@
             </div>
             <div class="mb-3">
                 <h3 class="text-sm font-medium text-gray-900">{{ $order->category?->name ?? '-' }}</h3>
-                <p class="text-xs text-gray-500 mb-1">{{ $order->department?->name ?? '-' }}</p>
+                <p class="text-xs text-gray-500 mb-1">
+                    {{ $order->department?->name ?? '-' }}
+                    @if($order->building)
+                    <span class="text-gray-400"> • </span>{{ $order->building->name }}
+                    @endif
+                </p>
                 <p class="text-xs text-gray-600 line-clamp-2">{{ $order->keluhan }}</p>
             </div>
             <div class="flex justify-between items-center">
