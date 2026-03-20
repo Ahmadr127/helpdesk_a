@@ -33,6 +33,7 @@ use App\Http\Controllers\Admin\UnitProsesController;
 use App\Http\Controllers\User\FeedbackController as UserFeedbackController;
 use App\Http\Controllers\Admin\ReportSirsController;
 use App\Http\Controllers\Admin\PositionController;
+use App\Http\Controllers\Admin\UserImportController;
 
 Route::get('/', function () {
     return redirect()->route('login');
@@ -137,11 +138,14 @@ Route::middleware(['auth'])->group(function () {
         // User Management routes
         Route::get('/users', [UserManagementController::class, 'index'])->name('users.index');
         Route::get('/users/create', [UserManagementController::class, 'create'])->name('users.create');
+        Route::get('/users/import', [UserImportController::class, 'showImportForm'])->name('users.import');
+        Route::get('/users/import/template', [UserImportController::class, 'downloadTemplate'])->name('users.import.template');
+        Route::post('/users/import', [UserImportController::class, 'import'])->name('users.import.process');
         Route::post('/users', [UserManagementController::class, 'store'])->name('users.store');
         Route::get('/users/{user}/edit', [UserManagementController::class, 'edit'])->name('users.edit');
         Route::put('/users/{user}', [UserManagementController::class, 'update'])->name('users.update');
         Route::delete('/users/{user}', [UserManagementController::class, 'destroy'])->name('users.destroy');
-        
+
         // Admin ticket routes
         Route::prefix('tickets')->name('tickets.')->group(function () {
             Route::get('/all', [TicketAdminController::class, 'all'])->name('all');

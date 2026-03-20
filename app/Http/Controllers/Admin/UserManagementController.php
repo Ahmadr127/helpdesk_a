@@ -13,9 +13,28 @@ use Illuminate\Validation\Rule;
 
 class UserManagementController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $users = User::latest()->paginate(10);
+        $query = User::query();
+
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function($q) use ($search) {
+                $q->where('name', 'ILIKE', "%{$search}%")
+                  ->orWhere('email', 'ILIKE', "%{$search}%")
+                  ->orWhere('nik', 'ILIKE', "%{$search}%");
+            });
+        }
+
+        if ($request->filled('role')) {
+            $query->where('role', $request->role);
+        }
+
+        if ($request->filled('status') && $request->status !== '') {
+            $query->where('status', $request->status);
+        }
+
+        $users = $query->latest()->paginate(10)->withQueryString();
         return view('admin.users_management.index', compact('users'));
     }
 
@@ -32,6 +51,7 @@ class UserManagementController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
+            'nik' => 'required|string|max:50|unique:users',
             'name' => 'required|string|max:255',
             'email' => 'required|string|max:255|unique:users',
             'password' => ['required', 'string', 'confirmed', 'min:3'],
@@ -43,6 +63,7 @@ class UserManagementController extends Controller
         ]);
 
         $user = User::create([
+            'nik' => $validated['nik'],
             'name' => $validated['name'],
             'email' => $validated['email'],
             'password' => Hash::make($validated['password']),
@@ -70,6 +91,7 @@ class UserManagementController extends Controller
     public function update(Request $request, User $user)
     {
         $rules = [
+            'nik' => ['required', 'string', 'max:50', Rule::unique('users')->ignore($user->id)],
             'name' => 'required|string|max:255',
             'email' => ['required', 'string', 'max:255', Rule::unique('users')->ignore($user->id)],
             'role' => 'required|in:admin,user',
@@ -86,6 +108,7 @@ class UserManagementController extends Controller
         $validated = $request->validate($rules);
 
         $user->update([
+            'nik' => $validated['nik'],
             'name' => $validated['name'],
             'email' => $validated['email'],
             'role' => $validated['role'],

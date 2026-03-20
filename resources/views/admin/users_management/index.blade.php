@@ -8,6 +8,13 @@
         <div class="flex items-center justify-between">
             <h2 class="text-xl font-semibold text-gray-800">Users Management</h2>
             <div class="flex items-center gap-4">
+                <a href="{{ route('admin.users.import') }}"
+                    class="inline-flex items-center bg-gradient-to-r from-green-500 to-green-600 text-white px-4 py-2 rounded-lg hover:from-green-600 hover:to-green-700 transition-all shadow-md">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/>
+                    </svg>
+                    Import Excel
+                </a>
                 <a href="{{ route('admin.users.create') }}"
                     class="bg-gradient-to-r from-blue-500 to-blue-600 text-white px-4 py-2 rounded-lg hover:from-blue-600 hover:to-blue-700 transition-all shadow-md">
                     Add User
@@ -19,9 +26,9 @@
     <div class="card bg-white shadow-md rounded-xl overflow-hidden">
         <div class="p-6">
             <!-- Search and Filter Bar -->
-            <div class="mb-6 flex flex-col sm:flex-row gap-4">
+            <form method="GET" action="{{ route('admin.users.index') }}" class="mb-6 flex flex-col sm:flex-row gap-4">
                 <div class="relative flex-1">
-                    <input type="text" id="search-users" placeholder="Search users..."
+                    <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari nama, username, atau NIK..."
                         class="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-green-100 focus:border-green-400 transition-colors">
                     <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                         <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -31,20 +38,30 @@
                     </div>
                 </div>
                 <div class="flex gap-3">
-                    <select id="filter-role"
+                    <select name="role" onchange="this.form.submit()"
                         class="rounded-lg border border-gray-200 focus:ring-2 focus:ring-green-100 focus:border-green-400 transition-colors">
                         <option value="">All Roles</option>
-                        <option value="admin">Admin</option>
-                        <option value="user">User</option>
+                        <option value="admin" {{ request('role') == 'admin' ? 'selected' : '' }}>Admin</option>
+                        <option value="user" {{ request('role') == 'user' ? 'selected' : '' }}>User</option>
                     </select>
-                    <select id="filter-status"
+                    <select name="status" onchange="this.form.submit()"
                         class="rounded-lg border border-gray-200 focus:ring-2 focus:ring-green-100 focus:border-green-400 transition-colors">
                         <option value="">All Status</option>
-                        <option value="1">Active</option>
-                        <option value="0">Inactive</option>
+                        <option value="1" {{ request('status') === '1' ? 'selected' : '' }}>Active</option>
+                        <option value="0" {{ request('status') === '0' ? 'selected' : '' }}>Inactive</option>
                     </select>
+                    <button type="submit" class="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg transition-colors">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                        </svg>
+                    </button>
+                    @if(request()->hasAny(['search','role','status']))
+                    <a href="{{ route('admin.users.index') }}" class="px-4 py-2 bg-red-50 hover:bg-red-100 text-red-600 rounded-lg transition-colors text-sm flex items-center">
+                        Reset
+                    </a>
+                    @endif
                 </div>
-            </div>
+            </form>
 
             <div class="overflow-x-auto rounded-lg shadow-sm border border-gray-100">
                 <table class="min-w-full divide-y divide-gray-200">
@@ -54,7 +71,7 @@
                                 Name
                             </th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">
-                                Email
+                                Username
                             </th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">
                                 Position</th>
@@ -80,6 +97,7 @@
                                     </div>
                                     <div class="ml-4">
                                         <div class="text-sm font-medium text-gray-900">{{ $user->name }}</div>
+                                        <div class="text-xs text-gray-500">NIK: {{ $user->nik ?? '-' }}</div>
                                     </div>
                                 </div>
                             </td>
@@ -155,50 +173,4 @@
     </div>
 </div>
 
-@push('scripts')
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    const searchInput = document.getElementById('search-users');
-    const filterRole = document.getElementById('filter-role');
-    const filterStatus = document.getElementById('filter-status');
-    const tableRows = document.querySelectorAll('tbody tr');
-
-    // Combine filters function
-    function applyFilters() {
-        const searchTerm = searchInput.value.toLowerCase();
-        const roleFilter = filterRole.value.toLowerCase();
-        const statusFilter = filterStatus.value;
-
-        tableRows.forEach(row => {
-            const name = row.querySelector('td:nth-child(1)').textContent.toLowerCase();
-            const email = row.querySelector('td:nth-child(2)').textContent.toLowerCase();
-            const role = row.querySelector('td:nth-child(4)').textContent.toLowerCase();
-            const statusText = row.querySelector('td:nth-child(6)').textContent.toLowerCase();
-            let status = '';
-
-            if (statusText.includes('active')) {
-                status = '1';
-            } else {
-                status = '0';
-            }
-
-            const matchesSearch = name.includes(searchTerm) || email.includes(searchTerm);
-            const matchesRole = roleFilter === '' || role.includes(roleFilter);
-            const matchesStatus = statusFilter === '' || status === statusFilter;
-
-            if (matchesSearch && matchesRole && matchesStatus) {
-                row.style.display = '';
-            } else {
-                row.style.display = 'none';
-            }
-        });
-    }
-
-    // Add event listeners
-    searchInput.addEventListener('input', applyFilters);
-    filterRole.addEventListener('change', applyFilters);
-    filterStatus.addEventListener('change', applyFilters);
-});
-</script>
-@endpush
 @endsection
